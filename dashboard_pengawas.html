@@ -680,30 +680,33 @@
                 <button id="sound-toggle" class="audio-toggle" onclick="toggleSound()">
                     <i class="fas fa-volume-mute"></i> <span>Suara Mati</span>
                 </button>
+                <button class="audio-toggle" onclick="exportToCSV()" style="background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.2);">
+                    <i class="fas fa-file-excel"></i> <span>Ekspor CSV</span>
+                </button>
             </div>
         </div>
 
         <!-- CLASS STATS -->
-        <div class="class-stats-grid">
-            <div class="class-stat-card">
-                <div class="class-stat-icon"><i class="fas fa-graduation-cap"></i></div>
+        <div class="class-stats-grid" style="grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
+            <div class="class-stat-card" style="border-left: 4px solid #1d4ed8;">
+                <div class="class-stat-icon"><i class="fas fa-door-open"></i></div>
                 <div class="class-stat-info">
-                    <b id="count-7">0</b>
-                    <span>Kelas 7</span>
+                    <b id="count-r1">0</b>
+                    <span>Ruang 1</span>
                 </div>
             </div>
-            <div class="class-stat-card">
-                <div class="class-stat-icon"><i class="fas fa-graduation-cap"></i></div>
+            <div class="class-stat-card" style="border-left: 4px solid #7c3aed;">
+                <div class="class-stat-icon"><i class="fas fa-door-open"></i></div>
                 <div class="class-stat-info">
-                    <b id="count-8">0</b>
-                    <span>Kelas 8</span>
+                    <b id="count-r2">0</b>
+                    <span>Ruang 2</span>
                 </div>
             </div>
-            <div class="class-stat-card">
-                <div class="class-stat-icon"><i class="fas fa-graduation-cap"></i></div>
+            <div class="class-stat-card" style="border-left: 4px solid #b45309;">
+                <div class="class-stat-icon"><i class="fas fa-door-open"></i></div>
                 <div class="class-stat-info">
-                    <b id="count-9">0</b>
-                    <span>Kelas 9</span>
+                    <b id="count-r3">0</b>
+                    <span>Ruang 3</span>
                 </div>
             </div>
         </div>
@@ -1009,8 +1012,51 @@
             const totalEl = document.getElementById('total-finished');
             if (totalEl) totalEl.textContent = filteredData.length;
 
+            // Hitung Per Ruang
+            const roomCounts = { 'R1': 0, 'R2': 0, 'R3': 0 };
+            filteredData.forEach(s => {
+                if (roomCounts[s.ruangan] !== undefined) roomCounts[s.ruangan]++;
+            });
+            document.getElementById('count-r1').textContent = roomCounts['R1'];
+            document.getElementById('count-r2').textContent = roomCounts['R2'];
+            document.getElementById('count-r3').textContent = roomCounts['R3'];
+
             // Updated for Absent Students
             updateAbsentList();
+        }
+
+        window.exportToCSV = function() {
+            const filteredData = getFilteredData();
+            if (filteredData.length === 0) {
+                alert("Tidak ada data untuk diekspor!");
+                return;
+            }
+
+            let csv = "No,Tanggal,Jam Selesai,Nama Siswa,Ruangan,Kelas\n";
+            filteredData.forEach((item, index) => {
+                const row = [
+                    filteredData.length - index,
+                    formatDate(item.created_at),
+                    item.jam_selesai || '-',
+                    `"${item.nama_siswa}"`,
+                    item.ruangan || '-',
+                    item.kelas || '-'
+                ];
+                csv += row.join(",") + "\n";
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            const fileName = `Rekap_Sumatif4_${selectedDate}_${currentFilter}.csv`;
+            
+            link.setAttribute("href", url);
+            link.setAttribute("download", fileName);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            logDebug(`Data diekspor: ${fileName}`);
         }
 
         function updateAbsentList() {
