@@ -1036,26 +1036,23 @@
             });
 
             const displayCount = (grade) => {
-                const current = counts[grade];
-                const total = totals[grade];
+                const current = counts[grade] || 0;
+                const total = totals[grade] || 0;
                 return total > 0 ? `${current}/${total}` : current;
             }
-
-            document.getElementById('count-7').textContent = displayCount('7');
-            document.getElementById('count-8').textContent = displayCount('8');
-            document.getElementById('count-9').textContent = displayCount('9');
-
-            const totalEl = document.getElementById('total-finished');
-            if (totalEl) totalEl.textContent = filteredData.length;
 
             // Hitung Per Ruang
             const roomCounts = { 'R1': 0, 'R2': 0, 'R3': 0 };
             filteredData.forEach(s => {
                 if (roomCounts[s.ruangan] !== undefined) roomCounts[s.ruangan]++;
             });
-            document.getElementById('count-r1').textContent = roomCounts['R1'];
-            document.getElementById('count-r2').textContent = roomCounts['R2'];
-            document.getElementById('count-r3').textContent = roomCounts['R3'];
+            
+            if (document.getElementById('count-r1')) document.getElementById('count-r1').textContent = roomCounts['R1'];
+            if (document.getElementById('count-r2')) document.getElementById('count-r2').textContent = roomCounts['R2'];
+            if (document.getElementById('count-r3')) document.getElementById('count-r3').textContent = roomCounts['R3'];
+
+            const totalEl = document.getElementById('total-finished');
+            if (totalEl) totalEl.textContent = filteredData.length;
 
             // Updated for Absent Students
             updateAbsentList();
