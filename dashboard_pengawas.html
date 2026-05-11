@@ -426,6 +426,36 @@
                 display: none;
             }
         }
+
+        /* NEW ANIMATIONS */
+        @keyframes highlightPulse {
+            0% { background: rgba(16, 185, 129, 0.2); }
+            100% { background: transparent; }
+        }
+
+        .new-row {
+            animation: highlightPulse 2s ease-out;
+        }
+
+        .class-stat-card {
+            animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Staggered Delay for Cards */
+        .class-stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .class-stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .class-stat-card:nth-child(3) { animation-delay: 0.3s; }
+
+        /* Custom Scrollbar for Dashboard */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
     </style>
 </head>
 
@@ -982,6 +1012,12 @@
             studentsData.unshift(newRecord);
             updateStats();
             renderTable();
+            
+            // Highlight the first row
+            setTimeout(() => {
+                const firstRow = document.querySelector('#finished-list-body tr:first-child');
+                if (firstRow) firstRow.classList.add('new-row');
+            }, 100);
         }
 
         function updateStats() {

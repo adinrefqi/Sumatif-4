@@ -31,6 +31,22 @@ body {
     padding: 0 2rem;
 }
 
+/* Custom Smooth Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.2);
+    border-radius: 10px;
+    border: 2px solid var(--bg-dark);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
 /* Navigation */
 .navbar {
     position: fixed;
@@ -155,13 +171,15 @@ body {
     text-decoration: none;
     border-radius: 10px;
     font-weight: 600;
-    transition: 0.3s;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     box-shadow: 0 8px 20px -5px rgba(99, 102, 241, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-main:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px) scale(1.02);
     background: var(--primary-dark);
+    box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.6);
 }
 
 .btn-outline {
@@ -348,17 +366,35 @@ body {
     border-radius: 20px;
     padding: 1.8rem;
     position: relative;
-    transition: 0.4s;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
+.exam-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s;
+    pointer-events: none;
+}
+
 .exam-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-10px);
     border-color: var(--primary);
-    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(99, 102, 241, 0.2);
+    background: rgba(30, 41, 59, 0.9);
+}
+
+.exam-card:hover::before {
+    opacity: 1;
 }
 
 .card-status {
