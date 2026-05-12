@@ -366,82 +366,6 @@
             20% { transform: rotate(0); }
             100% { transform: rotate(0); }
         }
-
-        /* WATERMARK */
-        #watermark {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 50; /* Di atas PDF, di bawah kontrol zoom/footer */
-            opacity: 0.15;
-        }
-
-        /* ANTI-CHEAT MODALS */
-        #modal-cheat-warning {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(220, 38, 38, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 9999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .cheat-warning-card {
-            background: #fff;
-            color: #0f172a;
-            border-radius: 24px;
-            max-width: 450px;
-            width: 100%;
-            padding: 2.5rem;
-            text-align: center;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            animation: shake 0.5s;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-10px); }
-            40%, 80% { transform: translateX(10px); }
-        }
-
-        .cheat-icon {
-            font-size: 4rem;
-            color: #ef4444;
-            margin-bottom: 1rem;
-        }
-
-        #locked-cheat-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #020617;
-            z-index: 10000;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .pin-input {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            font-size: 1.5rem;
-            text-align: center;
-            padding: 15px;
-            border-radius: 12px;
-            width: 200px;
-            margin-top: 1.5rem;
-            margin-bottom: 1rem;
-            letter-spacing: 5px;
-        }
     </style>
 </head>
 
@@ -454,7 +378,6 @@
 
     <!-- MAIN VIEW (PDF) -->
     <div id="main-exam-view">
-        <div id="watermark"></div>
         <div id="pdf-wrapper">
             <iframe id="pdf-viewer" src="about:blank"></iframe>
         </div>
@@ -548,37 +471,6 @@
                 SAYA MENGERTI
             </button>
         </div>
-    </div>
-
-    <!-- ANTI CHEAT WARNING MODAL -->
-    <div id="modal-cheat-warning">
-        <div class="cheat-warning-card">
-            <div class="cheat-icon"><i class="fas fa-exclamation-triangle"></i></div>
-            <h2 style="color: #ef4444; font-weight: 800; font-size: 1.8rem; margin-bottom: 0.5rem;">PERINGATAN!</h2>
-            <p style="font-size: 1.1rem; color: #334155; margin-bottom: 1rem;">Anda terdeteksi keluar dari layar ujian atau membuka aplikasi lain.</p>
-            <div style="background: #fef2f2; border: 1px solid #fca5a5; padding: 15px; border-radius: 12px; margin-bottom: 1.5rem;">
-                <b style="color: #b91c1c;">Pelanggaran ke-<span id="cheat-count">1</span> dari 3</b><br>
-                <span style="font-size: 0.9rem; color: #991b1b;">Jika mencapai 3 kali, ujian akan dikunci otomatis.</span>
-            </div>
-            <button onclick="closeCheatWarning()" style="background: #ef4444; border: none; padding: 1rem 2rem; border-radius: 15px; color: #fff; font-weight: 700; cursor: pointer; width: 100%; font-size: 1.1rem;">
-                SAYA MENGERTI & BERJANJI
-            </button>
-        </div>
-    </div>
-
-    <!-- LOCKED CHEAT SCREEN -->
-    <div id="locked-cheat-screen">
-        <div class="lock-icon" style="color: #ef4444; animation: none;"><i class="fas fa-user-lock"></i></div>
-        <h1 class="locked-title" style="color: #ef4444;">UJIAN DIKUNCI</h1>
-        <p class="locked-msg" style="color: #f87171;">
-            Anda telah melanggar aturan dengan keluar dari layar ujian lebih dari 3 kali.<br>
-            Silakan panggil pengawas ruangan untuk membuka kunci layar Anda.
-        </p>
-        <input type="password" id="unlock-pin" class="pin-input" placeholder="PIN PENGAWAS" maxlength="6">
-        <button onclick="unlockExam()" style="background: var(--primary); border: none; padding: 1rem 3rem; border-radius: 50px; color: #fff; font-weight: 700; cursor: pointer; font-size: 1.1rem;">
-            BUKA KUNCI
-        </button>
-        <div id="unlock-error" style="color: #ef4444; margin-top: 10px; font-weight: 600; display: none;">PIN Salah!</div>
     </div>
 
     <script type="module">
@@ -687,11 +579,7 @@
                 console.warn('No PDF URL provided');
             }
 
-            // 3. INIT WATERMARK AND ANTI-CHEAT
-            initWatermark();
-            initAntiCheat();
-
-            // 4. INIT SUPABASE (Sama seperti index.html agar stabil)
+            // 3. INIT SUPABASE (Sama seperti index.html agar stabil)
             const supabaseUrl = 'https://jbmhfwfckmneivztsizc.supabase.co';
             const supabaseKey = 'sb_publishable_lkdD9wXKswBi-r0PegxHhQ_6QTnitLL';
 
@@ -704,102 +592,6 @@
                 initPresence(window.supabaseClient);
             } catch (err) {
                 console.error('Supabase load error:', err);
-            }
-        }
-
-        // ======= WATERMARK LOGIC =======
-        function initWatermark() {
-            const wmDiv = document.getElementById('watermark');
-            if (!wmDiv) return;
-            
-            const savedName = localStorage.getItem('student_name') || 'Siswa THHK';
-            const savedClass = localStorage.getItem('student_class') || 'SMP';
-            const savedRoom = localStorage.getItem('student_room') || 'Ruang';
-            
-            // Buat SVG text background
-            const svgText = encodeURIComponent(`
-                <svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
-                    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Outfit, sans-serif" font-weight="700" font-size="20" fill="#ffffff" opacity="0.4" transform="rotate(-30, 150, 100)">
-                        ${savedName}
-                    </text>
-                    <text x="50%" y="65%" dominant-baseline="middle" text-anchor="middle" font-family="Outfit, sans-serif" font-weight="400" font-size="14" fill="#ffffff" opacity="0.4" transform="rotate(-30, 150, 100)">
-                        Kelas ${savedClass} - ${savedRoom}
-                    </text>
-                </svg>
-            `);
-            
-            wmDiv.style.backgroundImage = \`url("data:image/svg+xml;utf8,\${svgText}")\`;
-        }
-
-        // ======= ANTI-CHEAT LOGIC =======
-        let cheatViolations = parseInt(sessionStorage.getItem('cheatViolations') || 0);
-        let isExamFinished = false; // Flag if exam is officially submitted
-
-        function initAntiCheat() {
-            if (isExamFinished) return;
-
-            // Check existing violations on load
-            if (cheatViolations >= 3) {
-                lockCheatScreen();
-            }
-
-            // Detect Visibility Change (Tab Switch / Minimize)
-            document.addEventListener('visibilitychange', handleCheatEvent);
-            // Detect window blur
-            window.addEventListener('blur', handleCheatEvent);
-        }
-
-        function handleCheatEvent() {
-            if (isExamFinished) return;
-            if (document.hidden || document.visibilityState === 'hidden') {
-                triggerCheatViolation();
-            }
-        }
-
-        function triggerCheatViolation() {
-            // Cek jika modal lock sedang terbuka, jangan hitung pelanggaran baru
-            if (document.getElementById('locked-cheat-screen').style.display === 'flex') return;
-
-            cheatViolations++;
-            sessionStorage.setItem('cheatViolations', cheatViolations);
-
-            if (cheatViolations >= 3) {
-                lockCheatScreen();
-            } else {
-                document.getElementById('cheat-count').innerText = cheatViolations;
-                document.getElementById('modal-cheat-warning').style.display = 'flex';
-            }
-        }
-
-        window.closeCheatWarning = function() {
-            document.getElementById('modal-cheat-warning').style.display = 'none';
-        }
-
-        function lockCheatScreen() {
-            document.getElementById('main-exam-view').style.filter = 'blur(10px)';
-            document.getElementById('modal-cheat-warning').style.display = 'none';
-            document.getElementById('modal-confirm').style.display = 'none';
-            document.getElementById('locked-cheat-screen').style.display = 'flex';
-        }
-
-        window.unlockExam = function() {
-            const pinInput = document.getElementById('unlock-pin');
-            const errorEl = document.getElementById('unlock-error');
-            const SUPERVISOR_PIN = "THHK2026"; // PIN Pengawas
-
-            if (pinInput.value === SUPERVISOR_PIN) {
-                // Berhasil buka
-                cheatViolations = 0;
-                sessionStorage.setItem('cheatViolations', 0);
-                pinInput.value = '';
-                errorEl.style.display = 'none';
-                
-                document.getElementById('locked-cheat-screen').style.display = 'none';
-                document.getElementById('main-exam-view').style.filter = 'none';
-            } else {
-                errorEl.style.display = 'block';
-                pinInput.value = '';
-                pinInput.focus();
             }
         }
 
@@ -955,9 +747,6 @@
                 }
 
                 // SECURITY LOCK
-                isExamFinished = true; // Nonaktifkan anti-cheat
-                sessionStorage.removeItem('cheatViolations'); // Bersihkan riwayat pelanggaran
-
                 const viewer = document.getElementById('main-exam-view');
                 if (viewer) viewer.innerHTML = '';
                 document.getElementById('fixed-footer').style.display = 'none';
