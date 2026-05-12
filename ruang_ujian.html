@@ -567,25 +567,33 @@
             updateClock();
 
             // 2. PARSE PDF URL
-            const fullSearch = window.location.search;
-            let pdfUrl = '';
-            if (fullSearch.includes('pdf=')) {
-                pdfUrl = fullSearch.split('pdf=')[1].split('&')[0]; // Ambil sampai & saja
-                pdfUrl = decodeURIComponent(pdfUrl);
-            }
+            // 2. PARSE PDF URL
+            const urlParams = new URLSearchParams(window.location.search);
+            let pdfUrl = urlParams.get('pdf');
 
             if (pdfUrl) {
                 let finalUrl = pdfUrl;
                 if (finalUrl.includes('drive.google.com')) {
                     // Paksa ke mode preview agar bisa di-embed
+                    // Handle various Drive URL formats (view, edit, open, etc.)
                     finalUrl = finalUrl.replace(/\/view(\?.*)?$/, '/preview');
                     finalUrl = finalUrl.replace(/\/edit(\?.*)?$/, '/preview');
+                    finalUrl = finalUrl.replace(/\/open(\?.*)?$/, '/preview');
+                    
                     if (!finalUrl.includes('/preview')) {
-                        finalUrl = finalUrl.split('?')[0].replace(/\/$/, '') + '/preview';
+                        // If it doesn't end with /view or /edit, try to append /preview or transform it
+                        if (finalUrl.includes('id=')) {
+                            const id = new URL(finalUrl).searchParams.get('id');
+                            finalUrl = `https://drive.google.com/file/d/${id}/preview`;
+                        } else {
+                            finalUrl = finalUrl.split('?')[0].replace(/\/$/, '') + '/preview';
+                        }
                     }
                 }
                 const iframe = document.getElementById('pdf-viewer');
                 if (iframe) iframe.src = finalUrl;
+            } else {
+                console.warn('No PDF URL provided');
             }
 
             // 3. INIT SUPABASE (Sama seperti index.html agar stabil)
