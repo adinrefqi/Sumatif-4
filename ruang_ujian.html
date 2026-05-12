@@ -973,6 +973,12 @@
             }
         }
 
+        // Anti-Back Button (Mencegah siswa kembali ke portal tanpa sengaja)
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.go(1);
+        };
+
         // Anti-Insting Klik (Mencegah kabur sebelum selesai tanpa sengaja)
         window.onbeforeunload = function () {
             if (document.getElementById('locked-screen').style.display !== 'flex') {
