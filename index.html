@@ -2398,6 +2398,15 @@
                 return;
             }
 
+            // Trik Bypass Popup Blocker: Buka tab sinkron di awal
+            let examTab = null;
+            if (gkCurrentUrl) {
+                examTab = window.open('about:blank', '_blank');
+                if (examTab) {
+                    examTab.document.write('<body style="background:#0f172a; color:#fff; display:flex; align-items:center; justify-content:center; height:100vh; font-family:sans-serif;"><h2>Menyiapkan Ruang Ujian...</h2></body>');
+                }
+            }
+
             // FINAL VALIDATION: Check Grade matching
             const student = studentList.find(s => s.id === nomor);
             if (student) {
@@ -2427,6 +2436,7 @@
             const { error } = await client.from('presensi_siswa').insert([payload]);
 
             if (error) {
+                if (examTab) examTab.close();
                 showToast('Gagal: ' + error.message, true);
             } else {
                 localStorage.setItem('user_grade', activeClass); // Lock in his current class
@@ -2465,7 +2475,12 @@
                     // JIKA DIBUKA MELALUI GATEKEEPER: Buka Link Ujian di Ruang Ujian
                     if (gkCurrentUrl) {
                         const finalUrl = `ruang_ujian.html?pdf=${encodeURIComponent(gkCurrentUrl)}`;
-                        window.open(finalUrl, '_blank');
+                        if (examTab) {
+                            examTab.location.href = finalUrl;
+                        } else {
+                            // Fallback jika popup blocker terlalu ketat
+                            window.location.href = finalUrl;
+                        }
                         gkCurrentUrl = ''; // Reset
                     }
                 }, 1500);
