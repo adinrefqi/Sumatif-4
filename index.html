@@ -2403,7 +2403,8 @@
             if (gkCurrentUrl) {
                 examTab = window.open('about:blank', '_blank');
                 if (examTab) {
-                    examTab.document.write('<body style="background:#0f172a; color:#fff; display:flex; align-items:center; justify-content:center; height:100vh; font-family:sans-serif;"><h2>Menyiapkan Ruang Ujian...</h2></body>');
+                    examTab.document.write('<body style="background:#0f172a; color:#fff; display:flex; align-items:center; justify-content:center; height:100vh; font-family:sans-serif; margin:0;"><h2>Menyiapkan Ruang Ujian...</h2></body>');
+                    examTab.document.close();
                 }
             }
 
@@ -2411,6 +2412,7 @@
             const student = studentList.find(s => s.id === nomor);
             if (student) {
                 if (String(student.grade) !== String(activeClass)) {
+                    if (examTab) examTab.close();
                     showToast(`Kritikal: Siswa terdaftar di Kelas ${student.grade}, bukan Kelas ${activeClass}!`, true);
                     return;
                 }
@@ -2418,6 +2420,7 @@
 
             const pad = sigPads['sig-stu-tunggal'];
             if (!pad || pad.isEmpty()) {
+                if (examTab) examTab.close();
                 showToast('Mohon bubuhkan tanda tangan!', true);
                 return;
             }
@@ -2475,15 +2478,19 @@
                     // JIKA DIBUKA MELALUI GATEKEEPER: Buka Link Ujian di Ruang Ujian
                     if (gkCurrentUrl) {
                         const finalUrl = `ruang_ujian.html?pdf=${encodeURIComponent(gkCurrentUrl)}`;
-                        if (examTab) {
-                            examTab.location.href = finalUrl;
-                        } else {
-                            // Fallback jika popup blocker terlalu ketat
+                        try {
+                            if (examTab && !examTab.closed) {
+                                examTab.location.href = finalUrl;
+                            } else {
+                                window.open(finalUrl, '_blank');
+                            }
+                        } catch (e) {
+                            console.error("Popup Error, falling back to same tab:", e);
                             window.location.href = finalUrl;
                         }
                         gkCurrentUrl = ''; // Reset
                     }
-                }, 1500);
+                }, 800); // Dipercepat dari 1500ms agar lebih responsif
             }
         }
 
