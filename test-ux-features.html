@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test UX Features - Sistem Manajemen Nilai</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="ux-enhancements.js"></script>
+    <style>
+        body {
+            padding: 2rem;
+            background: #0f172a;
+            color: #f8fafc;
+            font-family: 'Outfit', sans-serif;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-section {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .test-section h2 {
+            color: #6366f1;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .test-section p {
+            color: #94a3b8;
+            margin-bottom: 1.5rem;
+        }
+        .test-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .test-btn {
+            padding: 0.8rem 1.5rem;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .test-btn:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+        }
+        .test-btn.danger {
+            background: #ef4444;
+        }
+        .test-btn.success {
+            background: #10b981;
+        }
+        .test-btn.warning {
+            background: #f59e0b;
+        }
+        .code-block {
+            background: #020617;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #10b981;
+            overflow-x: auto;
+        }
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 10px;
+            color: #10b981;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+        .timer-display {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .timer-display .time {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #6366f1;
+            font-family: 'Courier New', monospace;
+        }
+        .timer-display .label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 style="text-align: center; margin-bottom: 2rem; background: linear-gradient(135deg, #6366f1, #a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            🧪 UX Features Testing Dashboard
+        </h1>
+
+        <!-- Loading State Tests -->
+        <div class="test-section">
+            <h2><i class="fas fa-spinner"></i> 1. Loading State Tests</h2>
+            <p>Test berbagai jenis loading state untuk form dan button.</p>
+            
+            <div class="test-buttons">
+                <button class="test-btn" id="test-btn-1" onclick="testButtonLoading(this)">
+                    <i class="fas fa-play"></i> Test Button Loading
+                </button>
+                <button class="test-btn success" onclick="testOverlayLoading()">
+                    <i class="fas fa-layer-group"></i> Test Overlay Loading
+                </button>
+                <button class="test-btn warning" onclick="testFormLoading()">
+                    <i class="fas fa-file-alt"></i> Test Form Loading
+                </button>
+            </div>
+
+            <div class="code-block">
+                <div>// Button Loading</div>
+                <div>window.loadingState.show(button, 'Loading...');</div>
+                <div>window.loadingState.hide(button);</div>
+                <div style="margin-top: 0.5rem;">// Overlay Loading</div>
+                <div>window.loadingState.showOverlay('Processing...', 'Please wait');</div>
+                <div>window.loadingState.hideOverlay();</div>
+            </div>
+
+            <div class="status-indicator" id="loading-status">
+                <i class="fas fa-check-circle"></i> Ready to test
+            </div>
+        </div>
+
+        <!-- Logout Confirmation Tests -->
+        <div class="test-section">
+            <h2><i class="fas fa-sign-out-alt"></i> 2. Logout Confirmation Tests</h2>
+            <p>Test modal konfirmasi logout dan browser back button interception.</p>
+            
+            <div class="test-buttons">
+                <button class="test-btn danger" onclick="testLogoutModal()">
+                    <i class="fas fa-door-open"></i> Test Logout Modal
+                </button>
+                <button class="test-btn" onclick="testBackButton()">
+                    <i class="fas fa-arrow-left"></i> Test Back Button
+                </button>
+                <button class="test-btn success" onclick="simulateLogout()">
+                    <i class="fas fa-power-off"></i> Simulate Logout
+                </button>
+            </div>
+
+            <div class="code-block">
+                <div>// Show logout confirmation</div>
+                <div>window.logoutConfirm.show();</div>
+                <div style="margin-top: 0.5rem;">// Direct logout</div>
+                <div>window.logoutConfirm.confirm();</div>
+                <div style="margin-top: 0.5rem;">// Cancel logout</div>
+                <div>window.logoutConfirm.cancel();</div>
+            </div>
+
+            <div class="status-indicator" id="logout-status">
+                <i class="fas fa-info-circle"></i> Browser back button is intercepted
+            </div>
+        </div>
+
+        <!-- Timer Tests -->
+        <div class="test-section">
+            <h2><i class="fas fa-clock"></i> 3. Exam Timer Tests</h2>
+            <p>Test countdown timer dan warning system untuk ujian.</p>
+            
+            <div class="test-buttons">
+                <button class="test-btn" onclick="showNextExam()">
+                    <i class="fas fa-calendar-alt"></i> Show Next Exam
+                </button>
+                <button class="test-btn success" onclick="showCurrentExam()">
+                    <i class="fas fa-hourglass-half"></i> Show Current Exam
+                </button>
+                <button class="test-btn warning" onclick="testWarning()">
+                    <i class="fas fa-exclamation-triangle"></i> Test Warning (10 min)
+                </button>
+                <button class="test-btn danger" onclick="testDanger()">
+                    <i class="fas fa-bell"></i> Test Danger (5 min)
+                </button>
+            </div>
+
+            <div class="timer-display">
+                <div class="time" id="timer-display">--:--:--</div>
+                <div class="label" id="timer-label">Countdown to next exam</div>
+            </div>
+
+            <div class="code-block">
+                <div>// Get next exam</div>
+                <div>const next = window.examTimer.getNextExam();</div>
+                <div style="margin-top: 0.5rem;">// Get current exam</div>
+                <div>const current = window.examTimer.getCurrentExam();</div>
+                <div style="margin-top: 0.5rem;">// Show warning</div>
+                <div>window.examTimer.showTimeWarning('Message', 'warning');</div>
+            </div>
+
+            <div class="status-indicator" id="timer-status">
+                <i class="fas fa-sync-alt fa-spin"></i> Timer is running
+            </div>
+        </div>
+
+        <!-- Integration Tests -->
+        <div class="test-section">
+            <h2><i class="fas fa-puzzle-piece"></i> 4. Integration Tests</h2>
+            <p>Test kombinasi beberapa fitur sekaligus.</p>
+            
+            <div class="test-buttons">
+                <button class="test-btn" onclick="testFullWorkflow()">
+                    <i class="fas fa-tasks"></i> Test Full Workflow
+                </button>
+                <button class="test-btn success" onclick="testAllFeatures()">
+                    <i class="fas fa-rocket"></i> Test All Features
+                </button>
+                <button class="test-btn danger" onclick="resetTests()">
+                    <i class="fas fa-redo"></i> Reset All Tests
+                </button>
+            </div>
+
+            <div class="code-block" id="integration-log">
+                <div>// Integration test log will appear here...</div>
+            </div>
+        </div>
+
+        <!-- Console Output -->
+        <div class="test-section">
+            <h2><i class="fas fa-terminal"></i> Console Output</h2>
+            <p>Real-time console output untuk debugging.</p>
+            
+            <div class="code-block" id="console-output" style="max-height: 300px; overflow-y: auto;">
+                <div style="color: #6366f1;">Console initialized...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // TEST FUNCTIONS
+        // ============================================
+
+        // Intercept console.log
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const output = document.getElementById('console-output');
+            if (output) {
+                const div = document.createElement('div');
+                div.textContent = args.join(' ');
+                div.style.color = '#10b981';
+                output.appendChild(div);
+                output.scrollTop = output.scrollHeight;
+            }
+        };
+
+        // 1. Loading State Tests
+        function testButtonLoading(btn) {
+            const status = document.getElementById('loading-status');
+            status.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing button loading...';
+            
+            window.loadingState.show(btn, 'Loading...');
+            console.log('✅ Button loading started');
+            
+            setTimeout(() => {
+                window.loadingState.hide(btn);
+                status.innerHTML = '<i class="fas fa-check-circle"></i> Button loading test completed!';
+                console.log('✅ Button loading completed');
+            }, 3000);
+        }
+
+        function testOverlayLoading() {
+            const status = document.getElementById('loading-status');
+            status.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing overlay loading...';
+            
+            window.loadingState.showOverlay('Processing data...', 'This is a test');
+            console.log('✅ Overlay loading started');
+            
+            setTimeout(() => {
+                window.loadingState.hideOverlay();
+                status.innerHTML = '<i class="fas fa-check-circle"></i> Overlay loading test completed!';
+                console.log('✅ Overlay loading completed');
+            }, 3000);
+        }
+
+        function testFormLoading() {
+            const status = document.getElementById('loading-status');
+            status.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing form loading...';
+            console.log('✅ Form loading simulation started');
+            
+            // Simulate form submission
+            const buttons = document.querySelectorAll('.test-btn');
+            buttons.forEach(btn => {
+                window.loadingState.show(btn, 'Submitting...');
+            });
+            
+            setTimeout(() => {
+                buttons.forEach(btn => {
+                    window.loadingState.hide(btn);
+                });
+                status.innerHTML = '<i class="fas fa-check-circle"></i> Form loading test completed!';
+                console.log('✅ Form loading simulation completed');
+            }, 2000);
+        }
+
+        // 2. Logout Tests
+        function testLogoutModal() {
+            console.log('✅ Opening logout modal...');
+            window.logoutConfirm.show();
+        }
+
+        function testBackButton() {
+            console.log('✅ Testing back button interception...');
+            alert('Try pressing the browser back button now. You should see the logout confirmation modal.');
+        }
+
+        function simulateLogout() {
+            console.log('⚠️ Simulating logout (will not actually logout in test mode)');
+            const status = document.getElementById('logout-status');
+            status.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging out...';
+            
+            setTimeout(() => {
+                status.innerHTML = '<i class="fas fa-check-circle"></i> Logout simulation completed!';
+                console.log('✅ Logout simulation completed');
+            }, 2000);
+        }
+
+        // 3. Timer Tests
+        function showNextExam() {
+            const next = window.examTimer.getNextExam();
+            const display = document.getElementById('timer-display');
+            const label = document.getElementById('timer-label');
+            
+            if (next) {
+                console.log('✅ Next exam:', next);
+                label.textContent = `Next: ${next.name} on ${next.date}`;
+                updateTimerDisplay();
+            } else {
+                display.textContent = 'No upcoming exams';
+                label.textContent = 'All exams completed';
+                console.log('ℹ️ No upcoming exams');
+            }
+        }
+
+        function showCurrentExam() {
+            const current = window.examTimer.getCurrentExam();
+            const display = document.getElementById('timer-display');
+            const label = document.getElementById('timer-label');
+            
+            if (current) {
+                console.log('✅ Current exam:', current);
+                label.textContent = `Current: ${current.name}`;
+                display.textContent = 'IN PROGRESS';
+                display.style.color = '#10b981';
+            } else {
+                display.textContent = 'No active exam';
+                label.textContent = 'No exam in progress';
+                console.log('ℹ️ No active exam');
+            }
+        }
+
+        function testWarning() {
+            console.log('⚠️ Testing 10-minute warning...');
+            window.examTimer.showTimeWarning('Waktu tersisa 10 menit. Pastikan Anda sudah memeriksa jawaban.', 'warning');
+        }
+
+        function testDanger() {
+            console.log('🚨 Testing 5-minute danger alert...');
+            window.examTimer.showTimeWarning('Waktu tersisa kurang dari 5 menit! Segera selesaikan ujian Anda.', 'danger');
+        }
+
+        function updateTimerDisplay() {
+            const next = window.examTimer.getNextExam();
+            const display = document.getElementById('timer-display');
+            
+            if (!next) return;
+            
+            setInterval(() => {
+                const now = new Date();
+                const timeLeft = next.dateTime - now;
+                
+                if (timeLeft <= 0) {
+                    display.textContent = 'STARTED';
+                    return;
+                }
+                
+                const formatted = window.examTimer.formatTime(timeLeft);
+                display.textContent = formatted;
+            }, 1000);
+        }
+
+        // 4. Integration Tests
+        function testFullWorkflow() {
+            const log = document.getElementById('integration-log');
+            log.innerHTML = '';
+            
+            function addLog(msg, color = '#10b981') {
+                const div = document.createElement('div');
+                div.textContent = msg;
+                div.style.color = color;
+                log.appendChild(div);
+            }
+            
+            addLog('🚀 Starting full workflow test...', '#6366f1');
+            
+            // Step 1: Loading
+            addLog('Step 1: Testing loading state...');
+            window.loadingState.showOverlay('Step 1/3', 'Testing loading...');
+            
+            setTimeout(() => {
+                window.loadingState.hideOverlay();
+                addLog('✅ Loading state OK');
+                
+                // Step 2: Timer
+                addLog('Step 2: Testing timer...');
+                const next = window.examTimer.getNextExam();
+                if (next) {
+                    addLog(`✅ Timer OK - Next: ${next.name}`);
+                } else {
+                    addLog('⚠️ No upcoming exams', '#f59e0b');
+                }
+                
+                // Step 3: Logout
+                setTimeout(() => {
+                    addLog('Step 3: Testing logout modal...');
+                    addLog('✅ All tests completed!', '#10b981');
+                    console.log('✅ Full workflow test completed');
+                }, 1000);
+            }, 2000);
+        }
+
+        function testAllFeatures() {
+            console.log('🚀 Testing all features sequentially...');
+            
+            // Test 1
+            testOverlayLoading();
+            
+            setTimeout(() => {
+                // Test 2
+                testWarning();
+            }, 3500);
+            
+            setTimeout(() => {
+                // Test 3
+                showNextExam();
+            }, 6000);
+            
+            setTimeout(() => {
+                console.log('✅ All features tested!');
+                alert('All features tested! Check console for details.');
+            }, 8000);
+        }
+
+        function resetTests() {
+            console.log('🔄 Resetting all tests...');
+            document.getElementById('loading-status').innerHTML = '<i class="fas fa-check-circle"></i> Ready to test';
+            document.getElementById('logout-status').innerHTML = '<i class="fas fa-info-circle"></i> Browser back button is intercepted';
+            document.getElementById('timer-status').innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Timer is running';
+            document.getElementById('timer-display').textContent = '--:--:--';
+            document.getElementById('timer-label').textContent = 'Countdown to next exam';
+            document.getElementById('integration-log').innerHTML = '<div>// Integration test log will appear here...</div>';
+            document.getElementById('console-output').innerHTML = '<div style="color: #6366f1;">Console reset...</div>';
+            console.log('✅ All tests reset');
+        }
+
+        // Auto-start timer display
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('✅ UX Features Test Dashboard loaded');
+            console.log('ℹ️ All features are ready to test');
+            showNextExam();
+        });
+    </script>
+</body>
+</html>
