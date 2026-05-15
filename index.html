@@ -46,6 +46,17 @@
 
 
     <style>
+        /* ANTI COPY-PASTE & SELECTION */
+        body {
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+        input, textarea, select {
+            -webkit-user-select: auto;
+            user-select: auto;
+        }
+
         /* PRELOADER */
         #preloader {
             position: fixed;
@@ -3287,6 +3298,29 @@
 
         // Ensure Supabase (and Presence) starts
         getSupabase();
+
+        // --- SISTEM ANTI COPY-PASTE & ANTI-SELECTION ---
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+            return false;
+        });
+
+        ['copy', 'cut', 'drag', 'drop'].forEach(function (evt) {
+            document.addEventListener(evt, function (e) {
+                e.preventDefault();
+                return false;
+            });
+        });
+
+        document.addEventListener('paste', function (e) {
+            e.preventDefault();
+            if (typeof showToast === 'function') {
+                showToast('Aktivitas Tempel (Paste) dilarang selama ujian!', 'error');
+            } else {
+                alert('Aktivitas Tempel (Paste) dilarang selama ujian!');
+            }
+            return false;
+        });
     </script>
     
     <!-- UX Enhancements: Form Loading Patches -->
