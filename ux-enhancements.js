@@ -363,94 +363,101 @@ class ExamTimer {
         return [
             {
                 name: 'Pendidikan Agama',
-                date: '2026-06-03',
+                date: '2026-05-29',
                 startTime: '07:15',
                 endTime: '08:45',
                 session: 1
             },
             {
                 name: 'Bahasa Indonesia',
-                date: '2026-06-03',
+                date: '2026-05-29',
                 startTime: '09:15',
                 endTime: '10:45',
                 session: 2
             },
             {
                 name: 'Bahasa Inggris',
-                date: '2026-06-04',
+                date: '2026-06-02',
                 startTime: '07:15',
                 endTime: '08:45',
                 session: 1
             },
             {
                 name: 'Seni Budaya',
-                date: '2026-06-04',
+                date: '2026-06-02',
                 startTime: '09:15',
                 endTime: '10:45',
                 session: 2
             },
             {
                 name: 'Matematika',
-                date: '2026-06-05',
+                date: '2026-06-03',
                 startTime: '07:15',
                 endTime: '09:15',
                 session: 1
             },
             {
                 name: 'PJOK',
-                date: '2026-06-05',
+                date: '2026-06-03',
                 startTime: '09:30',
                 endTime: '11:00',
                 session: 2
             },
             {
                 name: 'IPA',
-                date: '2026-06-08',
+                date: '2026-06-05',
                 startTime: '07:15',
                 endTime: '08:45',
                 session: 1
             },
             {
                 name: 'PPKn',
-                date: '2026-06-08',
+                date: '2026-06-05',
                 startTime: '09:15',
                 endTime: '10:45',
                 session: 2
             },
             {
                 name: 'IPS',
-                date: '2026-06-09',
+                date: '2026-06-08',
                 startTime: '07:15',
                 endTime: '08:45',
                 session: 1
             },
             {
                 name: 'Bahasa Jawa',
-                date: '2026-06-09',
+                date: '2026-06-08',
                 startTime: '09:15',
                 endTime: '10:45',
                 session: 2
             },
             {
                 name: 'BK/BP',
-                date: '2026-06-09',
+                date: '2026-06-08',
                 startTime: '11:00',
                 endTime: '12:00',
                 session: 3
             },
             {
                 name: 'Informatika',
-                date: '2026-06-10',
+                date: '2026-06-09',
                 startTime: '07:15',
                 endTime: '08:45',
                 session: 1
             },
             {
                 name: 'Bahasa Mandarin',
-                date: '2026-06-10',
+                date: '2026-06-09',
                 startTime: '09:15',
                 endTime: '10:45',
                 session: 2
+            },
+            {
+                name: 'Prakarya/Coding',
+                date: '2026-06-09',
+                startTime: '11:00',
+                endTime: '12:00',
+                session: 3
             }
         ];
     }
