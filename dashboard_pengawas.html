@@ -1234,6 +1234,64 @@
             display: block;
             /* Selalu tampilkan untuk saat ini agar mudah diagnosa */
         }
+        /* EXTRA MOBILE OPTIMIZATIONS */
+        @media (max-width: 768px) {
+            .admin-modal, .modal-content {
+                width: 95% !important;
+                max-width: 100% !important;
+                margin: 10px auto !important;
+                padding: 1rem !important;
+            }
+            .form-grid, .pengawas, .class-stats-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            .modal-overlay {
+                padding: 10px;
+            }
+            td, th {
+                white-space: nowrap;
+            }
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .header-title {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            /* Make buttons in rows wrap and be full width if needed */
+            .btn-card, .btn-main {
+                flex: 1 1 100%;
+                margin-bottom: 5px;
+            }
+            .filter-btn {
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 5px;
+            }
+            div[style*="gap: 1rem"] {
+                flex-wrap: wrap;
+            }
+            #subject-control-list > div {
+                flex-direction: column;
+                align-items: flex-start !important;
+            }
+            #subject-control-list > div > button {
+                width: 100% !important;
+                margin-top: 10px;
+            }
+            /* Table wraper */
+            .table-responsive {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            /* Signatures */
+            canvas.sig-pad {
+                width: 100% !important;
+            }
+        }
     </style>
     <!-- Diagnostic Log Area -->
     <div id="debug-log">
@@ -3153,6 +3211,7 @@ window.searchMasterStudent = searchMasterStudent;
 </body>
 
 </html>
+
 
 
 
