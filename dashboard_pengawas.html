@@ -2526,11 +2526,37 @@
             if (warn) warn.style.display = 'none';
         }
         function showToast(message, isError = false) {
-            const toast = document.getElementById('toast');
+            let toast = document.getElementById('toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toast';
+                toast.className = 'toast';
+                toast.innerHTML = '<i class="fas fa-info-circle"></i> <span id="toast-message"></span>';
+                document.body.appendChild(toast);
+                
+                if (!document.getElementById('toast-style')) {
+                    const style = document.createElement('style');
+                    style.id = 'toast-style';
+                    style.innerHTML = `
+                        .toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 99999; left: 50%; bottom: 30px; transform: translateX(-50%); box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: opacity 0.3s, bottom 0.3s; opacity: 0; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold;}
+                        .toast.show { visibility: visible; opacity: 1; bottom: 50px; }
+                    `;
+                    document.head.appendChild(style);
+                }
+            }
+
             document.getElementById('toast-message').textContent = message;
-            toast.style.background = isError ? '#ef4444' : '#10b981';
+            if (isError) {
+                toast.style.background = '#ef4444';
+                toast.querySelector('i').className = 'fas fa-exclamation-circle';
+            } else {
+                toast.style.background = 'rgba(16, 185, 129, 0.9)';
+                toast.querySelector('i').className = 'fas fa-check-circle';
+            }
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3500);
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
 
         // Fungsi print Daftar Hadir - cetak dalam format tabel 20 baris
