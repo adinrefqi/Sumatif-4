@@ -40,9 +40,9 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="enhancements.css">
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
     <script src="data_siswa.js"></script>
-    <script src="ux-enhancements.js"></script>
 
 
     <style>
@@ -244,8 +244,15 @@
             <h2>Login Peserta</h2>
             <p>Sumatif 4 Online · SMP THHK</p>
             <div id="login-form">
-                <input type="text" id="login-no-ujian" class="login-input" placeholder="Contoh: 2526001" autofocus>
-                <button onclick="validateLogin()" class="login-btn">Masuk ke Dashboard</button>
+                <div class="login-input-wrapper">
+                    <i class="fas fa-user login-input-icon"></i>
+                    <input type="text" id="login-no-ujian" class="login-input" placeholder="Contoh: 2526001" autofocus>
+                </div>
+                <p class="login-helper-text">Masukkan ID yang tertera pada kartu peserta ujian</p>
+                <button onclick="validateLogin()" class="login-btn">Masuk ke Sistem</button>
+                <div style="margin-top: 1.5rem;">
+                    <a href="javascript:void(0)" class="login-forgot-link" onclick="alert('Silakan lapor ke pengawas di ruangan Anda.')"><i class="fas fa-key"></i> Lupa ID? Hubungi Pengawas</a>
+                </div>
                 <p id="login-error">Nomor Ujian tidak ditemukan atau salah!</p>
             </div>
         </div>
@@ -314,21 +321,7 @@
         <!-- Status Bar -->
         <section class="status-bar">
             <div class="container status-content">
-                <div class="status-item">
-                    <i class="far fa-clock"></i>
-                    <div class="status-text">
-                        <span class="label">Waktu Sekarang</span>
-                        <span id="current-time" class="value">00:00:00</span>
-                    </div>
-                </div>
-                <div class="status-divider"></div>
-                <div class="status-item">
-                    <i class="fas fa-hourglass-half"></i>
-                    <div class="status-text">
-                        <span class="label">Sesi Berikutnya</span>
-                        <span id="countdown" class="value">00j 00m 00d</span>
-                    </div>
-                </div>
+                <!-- Status items will be injected by ui-improvements.js here -->
             </div>
         </section>
 
@@ -470,69 +463,21 @@
                 </div>
 
                 <div class="schedule-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
-                    <div class="exam-card" data-aos="zoom-in" style="border-top: 4px solid #10b981;">
-                        <div class="card-status active" style="background: rgba(16, 185, 129, 0.2); color: #10b981;">
+                    <div class="exam-card admin-card-green" data-aos="zoom-in">
+                        <div class="card-status admin-badge-green">
                             Siswa
                         </div>
-                        <div class="card-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                        <div class="card-icon admin-icon-green">
                             <i class="fas fa-user-check"></i>
                         </div>
                         <h3>Daftar Hadir Siswa</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">
+                        <p class="admin-desc">
                             Seluruh peserta wajib mengisi daftar hadir sebelum memulai pengerjaan soal ujian.
                         </p>
                         <a href="javascript:void(0)" class="btn-card" id="btn-presensi-global"
                             onclick="openModal('modal-presensi')" style="background: #10b981;">Isi Presensi Sekarang</a>
                     </div>
 
-                    <div class="exam-card" data-aos="zoom-in" style="border-top: 4px solid #f59e0b;">
-                        <div class="card-status active" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b;">
-                            Guru
-                        </div>
-                        <div class="card-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
-                            <i class="fas fa-file-signature"></i>
-                        </div>
-                        <h3>Berita Acara Guru</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">
-                            Formulir untuk Pengawas atau Guru Mata Pelajaran dalam melaporkan jalannya ujian.
-                        </p>
-                        <a href="javascript:void(0)" class="btn-card" id="btn-ba-global" onclick="openModal('modal-ba')"
-                            style="background: #f59e0b;">Isi
-                            Berita Acara</a>
-                    </div>
-
-                    <div class="exam-card" data-aos="zoom-in" style="border-top: 4px solid #3b82f6;">
-                        <div class="card-status active" style="background: rgba(59, 130, 246, 0.2); color: #3b82f6;">
-                            Sistem
-                        </div>
-                        <div class="card-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
-                            <i class="fas fa-history"></i>
-                        </div>
-                        <h3>Riwayat Global</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">
-                            Lihat rekapitulasi kehadiran harian dan cetak dokumen secara masal per mata pelajaran.
-                        </p>
-                        <a href="javascript:void(0)" class="btn-card" onclick="openModal('modal-riwayat')"
-                            style="background: #3b82f6;">Lihat Riwayat Sekarang</a>
-                    </div>
-
-                    <!-- TOMBOL PANEL KURIKULUM -->
-                    <div class="exam-card" data-aos="zoom-in"
-                        style="border-top: 4px solid #f43f5e; grid-column: 1 / -1; max-width: 400px; margin: 0 auto;">
-                        <div class="card-status active" style="background: rgba(244, 63, 94, 0.2); color: #f43f5e;">
-                            Khusus Admin</div>
-                        <div class="card-icon" style="background: rgba(244, 63, 94, 0.1); color: #f43f5e;">
-                            <i class="fas fa-user-shield"></i>
-                        </div>
-                        <h3>Panel Kurikulum</h3>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">
-                            Kontrol Cepat: Buka/Tutup semua soal atau mapel tertentu.</p>
-                        <button onclick="authKurikulum()" class="btn-card"
-                            style="background: #f43f5e; color: white; border: none; cursor: pointer; width: 100%;">
-                            <i class="fas fa-lock-open"></i> Buka Panel Kontrol
-                        </button>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -542,18 +487,14 @@
                 <div class="section-header" data-aos="fade-up">
                     <h2>Jadwal Pelaksanaan</h2>
                     <p>Informasi waktu dan mata pelajaran Sumatif 4 Semester Genap.</p>
-                    <div
-                        style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-                        <div
-                            style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); padding: 0.5rem 1rem; border-radius: 12px; font-size: 0.85rem; color: #818cf8;">
+                    <div class="section-sesi-badges">
+                        <div class="sesi-badge sesi-badge-1">
                             <b>Sesi 1:</b> 07.15 - 08.45
                         </div>
-                        <div
-                            style="background: rgba(167, 139, 250, 0.1); border: 1px solid rgba(167, 139, 250, 0.2); padding: 0.5rem 1rem; border-radius: 12px; font-size: 0.85rem; color: #a78bfa;">
+                        <div class="sesi-badge sesi-badge-2">
                             <b>Sesi 2:</b> 09.15 - 10.45
                         </div>
-                        <div
-                            style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.2); padding: 0.5rem 1rem; border-radius: 12px; font-size: 0.85rem; color: #fbbf24;">
+                        <div class="sesi-badge sesi-badge-3">
                             <b>Sesi 3:</b> 11.00 - 12.00
                         </div>
                     </div>
@@ -660,8 +601,7 @@
         <section id="panduan" class="instructions section bg-alt">
             <div class="container grid-2">
                 <div class="instruction-img" data-aos="fade-right">
-                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                        alt="Panduan" class="floating">
+                    <img src="sekolah.png" alt="Panduan" class="floating" style="border-radius: 16px;">
                 </div>
                 <div class="instruction-text" data-aos="fade-left">
                     <h2>Panduan Pelaksanaan</h2>
@@ -1427,6 +1367,13 @@
             const mainContent = document.getElementById('main-content');
 
             if (isLoggedIn === 'true') {
+                const role = sessionStorage.getItem('role');
+                if (role === 'guru') {
+                    // Redirect to the dedicated supervisor dashboard
+                    window.location.href = 'dashboard_pengawas.html';
+                    return;
+                }
+
                 if (loginScreen) loginScreen.style.display = 'none';
                 if (mainContent) mainContent.style.display = 'block';
 
@@ -1527,6 +1474,19 @@
         };
 
         function proceedToDashboard(name, isGuru) {
+            if (isGuru) {
+                const loginScreen = document.getElementById('login-screen');
+                showToast(`Selamat datang, ${name} (Guru)! Mengalihkan...`);
+                
+                // Animasi fade out login screen
+                if (loginScreen) loginScreen.style.opacity = '0';
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard_pengawas.html';
+                }, 800);
+                return;
+            }
+
             const loginScreen = document.getElementById('login-screen');
             const mainContent = document.getElementById('main-content');
 
@@ -1543,10 +1503,26 @@
                 setTimeout(() => {
                     mainContent.style.opacity = '1';
                     AOS.refresh();
+                    
+                    // Panggil fungsi UI Enhancements jika tersedia agar info status muncul tanpa refresh
+                    if (typeof enhanceStatusBar === 'function') {
+                        // Bersihkan dulu untuk mencegah duplikasi (aman)
+                        const statusContent = document.querySelector('.status-content');
+                        if (statusContent) statusContent.innerHTML = '';
+                        enhanceStatusBar();
+                    }
+                    if (typeof getSupabase === 'function') {
+                        getSupabase(); // Initialize Supabase presence
+                    }
+
+                    if (isGuru) {
+                        const adminEl = document.getElementById('admin');
+                        if (adminEl) adminEl.scrollIntoView({ behavior: 'smooth' });
+                    }
                 }, 50);
             }, 500);
 
-            showToast(`Selamat datang, ${name} (${isGuru ? 'Guru' : 'Siswa'})!`);
+            showToast(`Selamat datang, ${name} (Siswa)!`);
         }
 
         // Listen for Login Keypress & Check Status
@@ -1561,80 +1537,10 @@
         });
 
         // Time script
-        function updateTime() {
-            const now = new Date();
-            // Force use colons instead of periods that can appear in id-ID locale
-            let timeStr = now.toLocaleTimeString('id-ID');
-            timeStr = timeStr.replace(/\./g, ':');
-            document.getElementById('current-time').textContent = timeStr;
-        }
-        setInterval(updateTime, 1000);
-        updateTime();
+        // Clock and Countdown features have been removed
+        function updateTime() { }
 
-        function startCountdown() {
-            const labelEl = document.querySelector('.status-text .label');
-            const countdownEl = document.getElementById('countdown');
-
-            function update() {
-                const now = new Date();
-                const nowMs = now.getTime();
-
-                // Konversi scheduleData ke array dan urutkan
-                const items = Object.entries(scheduleData).map(([key, val]) => ({
-                    key,
-                    name: mapelNames[key] || key,
-                    start: new Date(`${val.date}T${val.start}:00`).getTime(),
-                    end: new Date(`${val.date}T${val.end}:00`).getTime()
-                })).sort((a, b) => a.start - b.start);
-
-                let targetItem = null;
-                let isOngoing = false;
-
-                for (let item of items) {
-                    if (nowMs >= item.start && nowMs <= item.end) {
-                        targetItem = item;
-                        isOngoing = true;
-                        break;
-                    }
-                    if (nowMs < item.start) {
-                        targetItem = item;
-                        isOngoing = false;
-                        break;
-                    }
-                }
-
-                if (!targetItem) {
-                    if (labelEl) labelEl.textContent = "";
-                    if (countdownEl) countdownEl.textContent = "Seluruh Ujian Selesai";
-                    return;
-                }
-
-                if (isOngoing) {
-                    if (labelEl) labelEl.textContent = `Berlangsung ${targetItem.name}:`;
-                    const diff = targetItem.end - nowMs;
-                    if (countdownEl) countdownEl.textContent = formatTime(diff);
-                } else {
-                    if (labelEl) labelEl.textContent = `Menuju ${targetItem.name}:`;
-                    const diff = targetItem.start - nowMs;
-                    if (countdownEl) countdownEl.textContent = formatTime(diff);
-                }
-            }
-
-            function formatTime(ms) {
-                const d = Math.floor(ms / (1000 * 60 * 60 * 24));
-                const h = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const m = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-                const s = Math.floor((ms % (1000 * 60)) / 1000);
-
-                let text = "";
-                if (d > 0) text += `${d}h `;
-                text += `${h.toString().padStart(2, '0')}j ${m.toString().padStart(2, '0')}m ${s.toString().padStart(2, '0')}d`;
-                return text;
-            }
-
-            setInterval(update, 1000);
-            update();
-        }
+        function startCountdown() { }
 
         // ==========================================
         // DATA JADWAL UJIAN
@@ -1678,12 +1584,12 @@
         // ==========================================
         const linkUjian = {
             '7': {
-                'agama-islam': '',
+                'agama-islam': 'https://drive.google.com/file/d/13YVxjrMGqoTIe8ElUs9JX7XCytoFsN7t/view?usp=sharing',
                 'agama-kristen': '',
                 'agama-katolik': '',
                 'agama-budha': '',
                 'agama-khonghucu': '',
-                'b-indo': '',
+                'b-indo': 'https://drive.google.com/file/d/13YVxjrMGqoTIe8ElUs9JX7XCytoFsN7t/view?usp=sharing',
                 'b-inggris': '',
                 'seni': '',
                 'matematika': '',
@@ -1699,12 +1605,12 @@
                 'tka-indo': ''
             },
             '8': {
-                'agama-islam': '',
+                'agama-islam': 'https://drive.google.com/file/d/13YVxjrMGqoTIe8ElUs9JX7XCytoFsN7t/view?usp=sharing',
                 'agama-kristen': '',
                 'agama-katolik': '',
                 'agama-budha': '',
                 'agama-khonghucu': '',
-                'b-indo': '',
+                'b-indo': 'https://drive.google.com/file/d/13YVxjrMGqoTIe8ElUs9JX7XCytoFsN7t/view?usp=sharing',
                 'b-inggris': '',
                 'seni': '',
                 'matematika': '',
@@ -1720,7 +1626,7 @@
                 'tka-indo': ''
             },
             '9': {
-                'agama-islam': '',
+                'agama-islam': 'https://drive.google.com/file/d/13YVxjrMGqoTIe8ElUs9JX7XCytoFsN7t/view?usp=sharing',
                 'agama-kristen': 'https://drive.google.com/file/d/1-wrOmQR0PCe21o9JgY5CmgL9Yw4849X2/view?usp=drive_link',
                 'agama-katolik': 'https://drive.google.com/file/d/1ZjOB_-yV1uyekqNGRBcZmvthSiVPNrpr/view?usp=sharing',
                 'agama-budha': 'https://drive.google.com/file/d/1qR2ocJGLLXtl55B054w9H_hhLs0prfUs/view?usp=sharing',
@@ -1858,13 +1764,30 @@
                     handleBroadcast(payload);
                 })
                 .subscribe(async (status) => {
+                    const connDot = document.getElementById('ui-conn-dot');
+                    const connText = document.getElementById('ui-conn-text');
+
                     if (status === 'SUBSCRIBED') {
+                        if (connDot) {
+                            connDot.style.background = '#4ade80';
+                            connDot.style.boxShadow = '0 0 8px rgba(74,222,128,0.5)';
+                            connDot.style.animation = 'statusPulse 2s infinite';
+                        }
+                        if (connText) connText.textContent = 'Online';
+
                         await onlineChannel.track({
                             nama: savedName,
                             kelas: savedClass,
                             ruang: savedRoom,
                             online_at: new Date().toISOString(),
                         });
+                    } else if (status === 'CLOSED' || status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+                        if (connDot) {
+                            connDot.style.background = '#ef4444';
+                            connDot.style.boxShadow = '0 0 8px rgba(239,68,68,0.5)';
+                            connDot.style.animation = 'none';
+                        }
+                        if (connText) connText.textContent = 'Offline';
                     }
                 });
         }
@@ -3109,7 +3032,6 @@
         }
 
         // Fungsi pengecekan waktu
-        // Fungsi pengecekan waktu
         function getExamStatus(subjectKey, subjectId, grade) {
             if (examControl[grade] && examControl[grade].subjects[subjectKey]) {
                 return examControl[grade].subjects[subjectKey];
@@ -3266,9 +3188,6 @@
             });
         }
 
-        // Jalankan pengecekan setiap menit
-        setInterval(activateButtons, 60000);
-
         // --- UI REFINEMENT ---
         window.addEventListener('load', () => {
             const loader = document.getElementById('preloader');
@@ -3297,7 +3216,6 @@
             });
         });
 
-        startCountdown();
         activateButtons();
 
         // Ensure Supabase (and Presence) starts
@@ -3329,6 +3247,20 @@
     
     <!-- UX Enhancements: Form Loading Patches -->
     <script src="form-loading-patch.js"></script>
+    <!-- UX & UI Enhancement Scripts (must be after body content) -->
+    <script src="ux-enhancements.js"></script>
+    <script src="ui-improvements.js"></script>
+    <script>
+        // Safety fallback: force-hide preloader after 6 seconds
+        setTimeout(function() {
+            var loader = document.getElementById('preloader');
+            if (loader && loader.style.visibility !== 'hidden') {
+                loader.style.opacity = '0';
+                loader.style.visibility = 'hidden';
+                console.warn('⚠️ Preloader force-hidden by safety timeout');
+            }
+        }, 6000);
+    </script>
 </body>
 
 </html>

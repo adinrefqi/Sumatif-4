@@ -473,6 +473,10 @@ body {
     font-weight: 700;
     color: var(--text-white);
     letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    display: inline-block;
+    width: 220px;
+    text-align: left;
 }
 
 .status-divider {

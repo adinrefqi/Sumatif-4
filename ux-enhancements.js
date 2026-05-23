@@ -239,11 +239,19 @@ class LogoutConfirmation {
         this.hide();
         window.loadingState.showOverlay('Keluar dari sistem...', 'Sampai jumpa!');
         
-        // Clear localStorage
+        // Clear localStorage & sessionStorage
+        sessionStorage.removeItem('isLoggedIn');
+        sessionStorage.removeItem('role');
+        sessionStorage.removeItem('nomorUjian');
+        sessionStorage.removeItem('namaSiswa');
+        sessionStorage.removeItem('namaGuru');
+        sessionStorage.removeItem('user_grade');
+
         localStorage.removeItem('student_name');
         localStorage.removeItem('student_class');
         localStorage.removeItem('student_room');
         localStorage.removeItem('student_id');
+        localStorage.removeItem('user_grade');
         
         // Redirect setelah delay
         setTimeout(() => {

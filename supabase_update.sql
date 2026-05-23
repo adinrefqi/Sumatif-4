@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS public.laporan_selesai (
     created_at      TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE public.laporan_selesai ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public insert" ON public.laporan_selesai;
+DROP POLICY IF EXISTS "Allow public read" ON public.laporan_selesai;
 CREATE POLICY "Allow public insert" ON public.laporan_selesai FOR INSERT WITH CHECK (true);
 CREATE POLICY "Allow public read" ON public.laporan_selesai FOR SELECT USING (true);
 
@@ -26,6 +28,7 @@ CREATE TABLE IF NOT EXISTS public.master_siswa (
     created_at      TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE public.master_siswa ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public read" ON public.master_siswa;
 CREATE POLICY "Allow public read" ON public.master_siswa FOR SELECT USING (true);
 
 -- 3. TABEL: MASTER DATA GURU (Baru)
@@ -36,6 +39,7 @@ CREATE TABLE IF NOT EXISTS public.master_guru (
     created_at      TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE public.master_guru ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public read guru" ON public.master_guru;
 CREATE POLICY "Allow public read guru" ON public.master_guru FOR SELECT USING (true);
 
 -- 4. TABEL: PRESENSI SISWA (Pusat Data Kehadiran & Metadata Sesi)
@@ -55,6 +59,7 @@ CREATE TABLE IF NOT EXISTS public.presensi_siswa (
     created_at          TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE public.presensi_siswa ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow all access" ON public.presensi_siswa;
 CREATE POLICY "Allow all access" ON public.presensi_siswa FOR ALL USING (true);
 
 -- 5. TABEL: BERITA ACARA GURU
@@ -87,6 +92,7 @@ CREATE TABLE IF NOT EXISTS public.berita_acara_guru (
     created_at          TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE public.berita_acara_guru ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public all" ON public.berita_acara_guru;
 CREATE POLICY "Allow public all" ON public.berita_acara_guru FOR ALL USING (true);
 
 -- 6. TABEL: EXAM SETTINGS (Untuk Panel Kurikulum)
@@ -96,4 +102,5 @@ CREATE TABLE IF NOT EXISTS public.exam_settings (
     updated_at      TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE public.exam_settings ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public all settings" ON public.exam_settings;
 CREATE POLICY "Allow public all settings" ON public.exam_settings FOR ALL USING (true);

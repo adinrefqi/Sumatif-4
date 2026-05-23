@@ -76,15 +76,19 @@ CREATE TABLE IF NOT EXISTS public.master_siswa (
 -- =====================================================
 
 ALTER TABLE public.presensi_siswa ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public all" ON public.presensi_siswa;
 CREATE POLICY "Allow public all" ON public.presensi_siswa FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE public.berita_acara_guru ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public all" ON public.berita_acara_guru;
 CREATE POLICY "Allow public all" ON public.berita_acara_guru FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE public.laporan_selesai ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public all" ON public.laporan_selesai;
 CREATE POLICY "Allow public all" ON public.laporan_selesai FOR ALL USING (true) WITH CHECK (true);
 
 ALTER TABLE public.master_siswa ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public read" ON public.master_siswa;
 CREATE POLICY "Allow public read" ON public.master_siswa FOR SELECT USING (true);
 
 -- =====================================================
@@ -111,38 +115,38 @@ INSERT INTO public.master_siswa (id, nama, gender, grade, room, religion) VALUES
 ('2026-0303-0018', 'Faris Mahardika Luki', 'Laki-laki', 8, 1, 'Islam'),
 ('2026-0303-0019', 'Flourencia Alvina', 'Perempuan', 8, 1, 'Katolik'),
 ('2026-0303-0020', 'Giovanni Agnell Tanuwijaya', 'Laki-laki', 8, 1, 'Islam'),
-('2026-0303-0021', 'Gisella Cellena Cleola Andrian', 'Perempuan', 8, 2, 'Katolik'),
-('2026-0303-0022', 'Graciana Shinta Dewi', 'Perempuan', 8, 2, 'Kristen'),
-('2026-0303-0023', 'Henedictus Greffy Jeisen Putra', 'Laki-laki', 8, 2, 'Budha'),
-('2026-0303-0024', 'Ivana Jacinda', 'Perempuan', 8, 2, 'Budha'),
-('2026-0303-0025', 'Jefferson Setiawan', 'Laki-laki', 8, 2, 'Konghucu'),
+('2026-0303-0021', 'Gisella Cellena Cleola Andrian', 'Perempuan', 8, 1, 'Katolik'),
+('2026-0303-0022', 'Graciana Shinta Dewi', 'Perempuan', 8, 1, 'Kristen'),
+('2026-0303-0023', 'Henedictus Greffy Jeisen Putra', 'Laki-laki', 8, 1, 'Budha'),
+('2026-0303-0024', 'Ivana Jacinda', 'Perempuan', 8, 1, 'Budha'),
+('2026-0303-0025', 'Jefferson Setiawan', 'Laki-laki', 8, 1, 'Konghucu'),
 ('2026-0303-0026', 'Jesslyn Anna Belle Arminta Prawiro', 'Perempuan', 8, 2, 'Katolik'),
 ('2026-0303-0027', 'Jesslyn Yoewono', 'Perempuan', 8, 2, 'Konghucu'),
 ('2026-0303-0028', 'Jocelyn Octavia Gunawan', 'Perempuan', 8, 2, 'Budha'),
 ('2026-0303-0029', 'Johan Faizal', 'Laki-laki', 8, 2, 'Kristen'),
-('2026-0303-0030', 'Keiko Lee Yohanes', 'Perempuan', 8, 3, 'Kristen'),
-('2026-0303-0031', 'Marquez Loris', 'Laki-laki', 8, 3, 'Budha'),
-('2026-0303-0032', 'Michelle Angelica Setiono', 'Perempuan', 8, 3, 'Kristen'),
-('2026-0303-0033', 'Mikhaela Josephine Soetjipto', 'Perempuan', 8, 3, 'Katolik'),
-('2026-0303-0034', 'Octavelie Sila Kirana', 'Perempuan', 8, 3, 'Budha'),
-('2026-0303-0035', 'Reynaldo Xavier Alexander Gunawan', 'Laki-laki', 8, 3, 'Budha'),
-('2026-0303-0036', 'Sebastian Moses Firlandi', 'Laki-laki', 8, 3, 'Kristen'),
-('2026-0303-0037', 'Yuriko Jessi Setiawan', 'Perempuan', 8, 3, 'Kristen'),
-('2026-0303-0038', 'Desiani Natalia Siallagan', 'Perempuan', 8, 3, 'Kristen'),
+('2026-0303-0030', 'Keiko Lee Yohanes', 'Perempuan', 8, 2, 'Kristen'),
+('2026-0303-0031', 'Marquez Loris', 'Laki-laki', 8, 2, 'Budha'),
+('2026-0303-0032', 'Michelle Angelica Setiono', 'Perempuan', 8, 2, 'Kristen'),
+('2026-0303-0033', 'Mikhaela Josephine Soetjipto', 'Perempuan', 8, 2, 'Katolik'),
+('2026-0303-0034', 'Octavelie Sila Kirana', 'Perempuan', 8, 2, 'Budha'),
+('2026-0303-0035', 'Reynaldo Xavier Alexander Gunawan', 'Laki-laki', 8, 2, 'Budha'),
+('2026-0303-0036', 'Sebastian Moses Firlandi', 'Laki-laki', 8, 2, 'Kristen'),
+('2026-0303-0037', 'Yuriko Jessi Setiawan', 'Perempuan', 8, 2, 'Kristen'),
+('2026-0303-0038', 'Desiani Natalia Siallagan', 'Perempuan', 8, 2, 'Kristen'),
 ('2026-0303-0039', 'Cathleen Hava Eliora.S', 'Perempuan', 7, 1, 'Kristen'),
 ('2026-0303-0040', 'Chrisna Monica Onggowarsito', 'Perempuan', 7, 1, 'Kristen'),
 ('2026-0303-0041', 'Eleanore Kimberly Wong', 'Perempuan', 7, 1, 'Budha'),
 ('2026-0303-0042', 'Engracia Sarah Chrisyabelle.S', 'Perempuan', 7, 1, 'Kristen'),
 ('2026-0303-0043', 'Jasson Alvaro Gunarto', 'Laki-laki', 7, 1, 'Kristen'),
-('2026-0303-0044', 'Jennifer Aurelia Febriana', 'Perempuan', 7, 2, 'Kristen'),
+('2026-0303-0044', 'Jennifer Aurelia Febriana', 'Perempuan', 7, 1, 'Kristen'),
 ('2026-0303-0045', 'Keane William Gunawan', 'Laki-laki', 7, 2, 'Islam'),
 ('2026-0303-0046', 'Kenichi Alvaro Gavriel', 'Laki-laki', 7, 2, 'Kristen'),
 ('2026-0303-0047', 'Keyzia El Ryansyah', 'Perempuan', 7, 2, 'Islam'),
 ('2026-0303-0048', 'Melvin Antan Djaya', 'Laki-laki', 7, 2, 'Katolik'),
-('2026-0303-0049', 'M. Akhil Fadillah', 'Laki-laki', 7, 3, 'Islam'),
-('2026-0303-0050', 'Nathasya Michelle Lee', 'Perempuan', 7, 3, 'Kristen'),
-('2026-0303-0051', 'Nicholas Willson Kasuya', 'Laki-laki', 7, 3, 'Kristen'),
-('2026-0303-0052', 'Vincentius Fernandez Suharto', 'Laki-laki', 7, 3, 'Kristen')
+('2026-0303-0049', 'M. Akhil Fadillah', 'Laki-laki', 7, 2, 'Islam'),
+('2026-0303-0050', 'Nathasya Michelle Lee', 'Perempuan', 7, 2, 'Kristen'),
+('2026-0303-0051', 'Nicholas Willson Kasuya', 'Laki-laki', 7, 2, 'Kristen'),
+('2026-0303-0052', 'Vincentius Fernandez Suharto', 'Laki-laki', 7, 2, 'Kristen')
 ON CONFLICT (id) DO UPDATE SET 
     nama = EXCLUDED.nama,
     gender = EXCLUDED.gender,

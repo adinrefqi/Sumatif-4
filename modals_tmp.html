@@ -1,0 +1,386 @@
+
+
+        <!-- ========== MODAL FORM: BERITA ACARA ========== -->
+        <div class="modal-overlay" id="modal-ba">
+            <div class="admin-modal">
+                <div class="admin-modal-header">
+                    <div class="admin-modal-title">
+                        <div class="admin-modal-icon amber"><i class="fas fa-file-signature"></i></div>
+                        <div>
+                            <h3>Berita Acara Guru</h3>
+                            <p>Penyelenggaraan Sumatif IV · SMP THHK</p>
+                        </div>
+                    </div>
+                    <button class="admin-modal-close" onclick="closeModal('modal-ba')"><i
+                            class="fas fa-times"></i></button>
+                </div>
+
+                <div class="admin-modal-body">
+                    <!-- Mapel & Hari -->
+                    <div class="amf-row">
+                        <div class="amf-group">
+                            <label class="amf-label">Mata Pelajaran <span class="amf-req">*</span></label>
+                            <select id="ba-mapel" class="amf-input">
+                                <option value="">-- Pilih Mata Pelajaran --</option>
+                                <option value="Pendidikan Agama">Pendidikan Agama</option>
+                                <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                                <option value="Bahasa Inggris">Bahasa Inggris</option>
+                                <option value="Seni Budaya">Seni Budaya</option>
+                                <option value="Matematika">Matematika</option>
+                                <option value="PJOK">PJOK</option>
+                                <option value="IPA">IPA</option>
+                                <option value="PPKn">PPKn</option>
+                                <option value="IPS">IPS</option>
+                                <option value="Bahasa Jawa">Bahasa Jawa</option>
+                                <option value="Coding/Prakarya/TKA">Coding/Prakarya/TKA</option>
+                                <option value="Informatika">Informatika</option>
+                                <option value="Bahasa Mandarin">Bahasa Mandarin</option>
+                                <option value="BK/BP">BK/BP</option>
+                                <option value="TKA Bahasa Indonesia">TKA Bahasa Indonesia</option>
+                            </select>
+                        </div>
+                        <div class="amf-group">
+                            <label class="amf-label">Hari</label>
+                            <input type="text" id="ba-hari" class="amf-input" placeholder="Senin">
+                        </div>
+                    </div>
+                    <!-- Tanggal & Ruang -->
+                    <div class="amf-row">
+                        <div class="amf-group">
+                            <label class="amf-label">Tanggal <span class="amf-req">*</span></label>
+                            <input type="date" id="ba-tanggal-full" class="amf-input">
+                        </div>
+                        <div class="amf-group">
+                            <label class="amf-label">Ruang</label>
+                            <input type="text" id="ba-ruang" class="amf-input" placeholder="Contoh: Lab Komputer">
+                        </div>
+                    </div>
+                    <!-- Pukul Pelaksanaan Selection -->
+                    <div class="amf-group">
+                        <label class="amf-label">Pukul Pelaksanaan <span class="amf-req">*</span></label>
+                        <select id="ba-pukul" class="amf-input">
+                            <option value="">-- Pilih Waktu --</option>
+                            <option value="07.15 - 08.45">07.15 - 08.45</option>
+                            <option value="09.15 - 10.45">09.15 - 10.45</option>
+                        </select>
+                    </div>
+
+                    <div class="amf-divider"><span>Data Kehadiran</span></div>
+
+                    <!-- Jumlah Peserta -->
+                    <div class="amf-row three-col">
+                        <div class="amf-group">
+                            <label class="amf-label">Seharusnya Hadir</label>
+                            <input type="number" id="ba-jml-seharusnya" class="amf-input" placeholder="0" min="0">
+                        </div>
+                        <div class="amf-group">
+                            <label class="amf-label">Yang Hadir</label>
+                            <input type="number" id="ba-jml-hadir" class="amf-input" placeholder="0" min="0">
+                        </div>
+                        <div class="amf-group">
+                            <label class="amf-label">Tidak Hadir</label>
+                            <input type="number" id="ba-jml-tidak-hadir" class="amf-input" placeholder="0" min="0">
+                        </div>
+                    </div>
+                    <!-- Nomor Hadir & Tidak -->
+                    <div class="amf-row">
+                        <div class="amf-group">
+                            <label class="amf-label">Nomor Peserta yang Hadir</label>
+                            <input type="text" id="ba-nomor-hadir" class="amf-input" placeholder="1, 2, 3, 4 ...">
+                        </div>
+                        <div class="amf-group">
+                            <label class="amf-label">Nomor Peserta yang Tidak Hadir</label>
+                            <input type="text" id="ba-nomor-tidak-hadir" class="amf-input"
+                                placeholder="Kosong jika tidak ada">
+                        </div>
+                    </div>
+
+                    <div class="amf-divider"><span>Detail Soal & Lembar</span></div>
+
+                    <div class="amf-row three-col">
+                        <div class="amf-group">
+                            <label class="amf-label">Lembar Soal (Eksp.)</label>
+                            <input type="number" id="ba-lembar-soal" class="amf-input" placeholder="0" min="0">
+                        </div>
+                        <div class="amf-group">
+                            <label class="amf-label">Lembar BA (Eksp.)</label>
+                            <input type="number" id="ba-lembar-ba" class="amf-input" placeholder="0" min="0">
+                        </div>
+                        <div class="amf-group">
+                            <label class="amf-label">Lembar Jawab (Eksp.)</label>
+                            <input type="number" id="ba-lembar-jawab" class="amf-input" placeholder="0" min="0">
+                        </div>
+                    </div>
+
+                    <!-- Catatan -->
+                    <div class="amf-group">
+                        <label class="amf-label">Catatan Selama Pelaksanaan</label>
+                        <textarea id="ba-catatan" class="amf-input" rows="3"
+                            placeholder="Tulis catatan atau kendala jika ada..."></textarea>
+                    </div>
+
+                    <div class="amf-divider"><span>Data Pengawas</span></div>
+
+                    <!-- Pengawas with Signature Pads (Berita Acara) -->
+                    <div class="amf-sigpad-grid">
+                        <!-- Pengawas 1 -->
+                        <div class="amf-sigpad-card p1">
+                            <div class="amf-sigpad-badge p1">Pengawas 1</div>
+                            <div class="amf-row" style="margin-bottom:0.5rem;">
+                                <div class="amf-group" style="margin-bottom:0.5rem;">
+                                    <label class="amf-label">Nama</label>
+                                    <input type="text" id="ba-p1-nama" class="amf-input" placeholder="Nama lengkap">
+                                </div>
+                                <div class="amf-group" style="margin-bottom:0.5rem;">
+                                    <label class="amf-label">NIY</label>
+                                    <input type="text" id="ba-p1-niy" class="amf-input" placeholder="NIY">
+                                </div>
+                            </div>
+                            <label class="amf-label">Tanda Tangan</label>
+                            <div class="amf-sig-wrap">
+                                <canvas id="ba-sig-p1" class="amf-sig-canvas"></canvas>
+                                <div class="amf-sig-placeholder" id="ba-sig-p1-hint">
+                                    <i class="fas fa-pen-nib"></i>
+                                    <span>Gambar tanda tangan di sini</span>
+                                </div>
+                            </div>
+                            <div class="amf-sig-actions">
+                                <button type="button" class="amf-sig-clear" onclick="clearSig('ba-sig-p1')">
+                                    <i class="fas fa-undo"></i> Hapus / Ulangi
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Pengawas 2 -->
+                        <div class="amf-sigpad-card p2">
+                            <div class="amf-sigpad-badge p2">Pengawas 2</div>
+                            <div class="amf-row" style="margin-bottom:0.5rem;">
+                                <div class="amf-group" style="margin-bottom:0.5rem;">
+                                    <label class="amf-label">Nama</label>
+                                    <input type="text" id="ba-p2-nama" class="amf-input" placeholder="Nama lengkap">
+                                </div>
+                                <div class="amf-group" style="margin-bottom:0.5rem;">
+                                    <label class="amf-label">NIY</label>
+                                    <input type="text" id="ba-p2-niy" class="amf-input" placeholder="NIY">
+                                </div>
+                            </div>
+                            <label class="amf-label">Tanda Tangan</label>
+                            <div class="amf-sig-wrap">
+                                <canvas id="ba-sig-p2" class="amf-sig-canvas"></canvas>
+                                <div class="amf-sig-placeholder" id="ba-sig-p2-hint">
+                                    <i class="fas fa-pen-nib"></i>
+                                    <span>Gambar tanda tangan di sini</span>
+                                </div>
+                            </div>
+                            <div class="amf-sig-actions">
+                                <button type="button" class="amf-sig-clear" onclick="clearSig('ba-sig-p2')">
+                                    <i class="fas fa-undo"></i> Hapus / Ulangi
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Footer -->
+                <div class="admin-modal-footer">
+                    <div></div>
+                    <div style="display:flex; gap:0.75rem;">
+                        <button class="amf-btn-print" onclick="printBAForm()">
+                            <i class="fas fa-print"></i> Cetak
+                        </button>
+                        <button class="amf-btn-save amber" onclick="submitBADoc()">
+                            <i class="fas fa-save"></i> Simpan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ========== MODAL RIWAYAT KEHADIRAN ========== -->
+        <div class="modal-overlay" id="modal-riwayat">
+            <div class="admin-modal" style="max-width: 950px;">
+                <div class="admin-modal-header">
+                    <div class="admin-modal-title">
+                        <div class="admin-modal-icon blue"><i class="fas fa-history"></i></div>
+                        <div>
+                            <h3>Riwayat Kehadiran Global</h3>
+                            <p style="font-size:0.8rem; opacity:0.8;">Data terekam di database (Tabel: presensi_siswa)
+                            </p>
+                        </div>
+                    </div>
+                    <button class="admin-modal-close" onclick="closeModal('modal-riwayat')"><i
+                            class="fas fa-times"></i></button>
+                </div>
+                <div class="admin-modal-body">
+                    <!-- TABS UNTUK RIWAYAT -->
+                    <div class="class-selector" style="margin-bottom: 1.5rem; justify-content: flex-start;">
+                        <div class="tabs">
+                            <button class="tab-btn active riwayat-tab-btn" data-r-tab="presensi"
+                                onclick="switchRiwayatTab('presensi')">
+                                <i class="fas fa-user-check"></i> Riwayat Presensi
+                            </button>
+                            <button class="tab-btn riwayat-tab-btn" data-r-tab="ba" onclick="switchRiwayatTab('ba')">
+                                <i class="fas fa-file-alt"></i> Riwayat Berita Acara
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- RIWAYAT PRESENSI CONTENT -->
+                    <div id="riwayat-presensi-content">
+                        <div
+                            style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="font-size: 0.9rem; opacity: 0.8;">Menampilkan rekapitulasi kehadiran per sesi
+                            </div>
+                            <button class="btn-main" onclick="loadRiwayatGlobal()"
+                                style="padding: 0.6rem 1rem; font-size: 0.85rem;">
+                                <i class="fas fa-sync"></i> Segarkan Data
+                            </button>
+                        </div>
+
+                        <div style="overflow-x: auto; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;">
+                            <table style="width:100%; border-collapse: collapse; font-size: 0.9rem;">
+                                <thead>
+                                    <tr style="background: rgba(255,255,255,0.05); text-align: left;">
+                                        <th style="padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">Mata
+                                            Pelajaran</th>
+                                        <th style="padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                            Tanggal
+                                        </th>
+                                        <th
+                                            style="padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                                            R1</th>
+                                        <th
+                                            style="padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                                            R2</th>
+                                        <th
+                                            style="padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                                            R3</th>
+                                        <th
+                                            style="padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                                            Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="riwayat-global-body">
+                                    <tr>
+                                        <td colspan="6" style="padding: 2rem; text-align: center; opacity: 0.6;">Klik
+                                            "Segarkan Data" untuk memuat...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- RIWAYAT BERITA ACARA CONTENT -->
+                    <div id="riwayat-ba-content" style="display: none;">
+                        <div
+                            style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="font-size: 0.9rem; opacity: 0.8;">Daftar berita acara pelaksanaan yang telah
+                                disimpan</div>
+                            <button class="btn-main" onclick="loadRiwayatBA()"
+                                style="padding: 0.6rem 1rem; font-size: 0.85rem;">
+                                <i class="fas fa-sync"></i> Segarkan Data
+                            </button>
+                        </div>
+
+                        <div style="overflow-x: auto; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;">
+                            <table style="width:100%; border-collapse: collapse; font-size: 0.9rem;">
+                                <thead>
+                                    <tr style="background: rgba(255,255,255,0.05); text-align: left;">
+                                        <th style="padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">Mata
+                                            Pelajaran</th>
+                                        <th style="padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">Waktu
+                                            Pelaksanaan</th>
+                                        <th style="padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">Hadir
+                                        </th>
+                                        <th style="padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                            Pengawas
+                                        </th>
+                                        <th
+                                            style="padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                                            Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="riwayat-ba-body">
+                                    <tr>
+                                        <td colspan="5" style="padding: 2rem; text-align: center; opacity: 0.6;">Klik
+                                            "Segarkan Data" untuk memuat...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- MODAL CONTROL PANEL KURIKULUM -->
+        <div id="modal-kurikulum" class="modal-overlay" style="z-index: 22000;">
+            <div class="modal-content" style="max-width: 600px; max-height: 85vh; overflow-y: auto;">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Sistem Kontrol Kurikulum</span>
+                    </div>
+                    <button class="modal-close" onclick="closeModal('modal-kurikulum')">&times;</button>
+                </div>
+                <div class="admin-modal-body">
+                    <p
+                        style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1.5rem; border-left: 3px solid #f43f5e; padding-left: 10px;">
+                        Gunakan toggle di bawah untuk membuka atau menutup akses soal secara instan tanpa mengedit kode.
+                    </p>
+
+                    <div
+                        style="background: rgba(244, 63, 94, 0.1); padding: 1.5rem; border-radius: 15px; margin-bottom: 2rem;">
+                        <h4 style="color: #f43f5e; margin-bottom: 1rem;">Kontrol Master (Seluruh Kelas)</h4>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="setGlobalStatus('active')" class="btn-card"
+                                style="background: #10b981; color: white; cursor: pointer;">Buka Semua Soal</button>
+                            <button onclick="setGlobalStatus('passed')" class="btn-card"
+                                style="background: #f43f5e; color: white; cursor: pointer;">Tutup Semua Soal</button>
+                        </div>
+                    </div>
+
+                    <div
+                        style="display: flex; gap: 10px; margin-bottom: 1.5rem; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 12px;">
+                        <button onclick="setControlGrade('7')" class="ctrl-grade-btn" id="ctrl-grade-7"
+                            style="flex:1; padding:0.8rem; border-radius:10px; border:none; background:#3b82f6; color:white; font-weight:700; cursor:pointer;">Kelas
+                            7</button>
+                        <button onclick="setControlGrade('8')" class="ctrl-grade-btn" id="ctrl-grade-8"
+                            style="flex:1; padding:0.8rem; border-radius:10px; border:none; background:transparent; color:#94a3b8; font-weight:700; cursor:pointer;">Kelas
+                            8</button>
+                        <button onclick="setControlGrade('9')" class="ctrl-grade-btn" id="ctrl-grade-9"
+                            style="flex:1; padding:0.8rem; border-radius:10px; border:none; background:transparent; color:#94a3b8; font-weight:700; cursor:pointer;">Kelas
+                            9</button>
+                    </div>
+
+                    <div id="subject-control-list" style="margin-top: 1rem;">
+                        <!-- Kontrol Per Mapel Dimasukkan via JS -->
+                    </div>
+
+                    <div class="amf-divider"><span>Pencarian Data Master Siswa</span></div>
+                    <div style="margin-bottom: 1rem;">
+                        <input type="text" id="master-search" class="amf-input" placeholder="Cari Nama atau Nomor Peserta..." oninput="searchMasterStudent()">
+                    </div>
+                    <div style="max-height: 250px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; background: rgba(0,0,0,0.2);">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                            <thead style="position: sticky; top: 0; background: #1e293b;">
+                                <tr style="text-align: left; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                    <th style="padding: 10px;">ID / Nomor</th>
+                                    <th style="padding: 10px;">Nama Siswa</th>
+                                    <th style="padding: 10px;">Kls/Rg</th>
+                                </tr>
+                            </thead>
+                            <tbody id="master-student-body">
+                                <tr><td colspan="3" style="padding: 20px; text-align: center; opacity: 0.5;">Gunakan kolom cari di atas...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
