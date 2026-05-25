@@ -2929,7 +2929,10 @@
                         const currSiswa = sessionStorage.getItem('nomorUjian');
                         if (currSiswa && examControl.blocked_students && examControl.blocked_students.includes(currSiswa)) {
                             sessionStorage.clear();
-                            document.body.innerHTML = '<div style="background:#ef4444;color:white;position:fixed;top:0;left:0;right:0;bottom:0;z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:sans-serif;text-align:center;padding:20px;"><h1>UJIAN DIHENTIKAN!</h1><p style="font-size:1.2rem;">Akun Anda diblokir oleh Pengawas.</p><p>Silakan lapor ke meja pengawas segera.</p></div>';
+                            const redScreen = document.createElement('div');
+                            redScreen.style.cssText = 'background:#ef4444;color:white;position:fixed;top:0;left:0;right:0;bottom:0;z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:sans-serif;text-align:center;padding:20px;';
+                            redScreen.innerHTML = '<h1>UJIAN DIHENTIKAN!</h1><p style="font-size:1.2rem;">Akun Anda diblokir oleh Pengawas.</p><p>Silakan lapor ke meja pengawas segera.</p>';
+                            document.body.appendChild(redScreen);
                             setTimeout(() => { window.location.reload(); }, 3000);
                             return;
                         }
