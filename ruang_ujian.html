@@ -827,6 +827,22 @@
                 .on('broadcast', { event: 'announcement' }, ({ payload }) => {
                     handleBroadcast(payload);
                 })
+                .on('postgres_changes', {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'exam_settings',
+                    filter: 'id=eq.master_config'
+                }, payload => {
+                    if (payload.new && payload.new.data) {
+                        const examControl = payload.new.data;
+                        const currSiswa = sessionStorage.getItem('nomorUjian');
+                        if (currSiswa && examControl.blocked_students && examControl.blocked_students.includes(currSiswa)) {
+                            sessionStorage.clear();
+                            alert("Ujian dihentikan secara paksa! Akun Anda diblokir oleh Pengawas. Silakan melapor.");
+                            window.location.href = 'index.html';
+                        }
+                    }
+                })
                 .subscribe(async (status) => {
                     if (status === 'SUBSCRIBED') {
                         await onlineChannel.track({

@@ -1422,6 +1422,14 @@
                     .maybeSingle();
 
                 if (student) {
+                    if (examControl.blocked_students && examControl.blocked_students.includes(student.id)) {
+                        btn.disabled = false;
+                        btn.innerHTML = 'Masuk ke Sistem';
+                        errorEl.innerHTML = '<i class="fas fa-lock"></i> Akun Anda diblokir oleh Pengawas. Silakan melapor!';
+                        errorEl.style.display = 'block';
+                        return;
+                    }
+
                     // LOGIN SEBAGAI SISWA
                     sessionStorage.setItem('isLoggedIn', 'true');
                     sessionStorage.setItem('role', 'siswa');
@@ -2916,6 +2924,16 @@
                 }, payload => {
                     if (payload.new && payload.new.data) {
                         examControl = payload.new.data;
+
+                        // AUTO LOGOUT JIKA DIBLOKIR
+                        const currSiswa = sessionStorage.getItem('nomorUjian');
+                        if (currSiswa && examControl.blocked_students && examControl.blocked_students.includes(currSiswa)) {
+                            sessionStorage.clear();
+                            alert("Ujian dihentikan! Akun Anda baru saja diblokir oleh Pengawas. Silakan lapor ke meja pengawas.");
+                            window.location.reload();
+                            return;
+                        }
+
                         activateButtons();
                         if (document.getElementById('modal-kurikulum').classList.contains('active')) {
                             renderControlList();

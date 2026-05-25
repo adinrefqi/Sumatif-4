@@ -2383,6 +2383,7 @@
 
         let examControl = {
             global: 'passed',
+            blocked_students: [],
             '7': { subjects: {} },
             '8': { subjects: {} },
             '9': { subjects: {} }
@@ -3100,6 +3101,7 @@
 
                 if (data && data.data) {
                     examControl = data.data;
+                    if (!examControl.blocked_students) examControl.blocked_students = [];
                     if (document.getElementById('modal-kurikulum').classList.contains('active')) {
                         renderControlList();
                     }
@@ -3199,15 +3201,43 @@
             }
 
             filtered.forEach(s => {
+                const isBlocked = (examControl.blocked_students || []).includes(s.id);
                 const tr = document.createElement('tr');
                 tr.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
                 tr.innerHTML = `
                     <td style="padding: 8px 10px; font-family: monospace; color: #60a5fa;">${s.id}</td>
                     <td style="padding: 8px 10px; color: white;">${s.nama}</td>
                     <td style="padding: 8px 10px; color: #94a3b8; font-size: 0.8rem;">Kls ${s.grade} / R${s.room}</td>
+                    <td style="padding: 8px 10px; text-align: right;">
+                        <button onclick="toggleBlockStudent('${s.id}')" style="padding: 4px 8px; border-radius: 4px; border: 1px solid ${isBlocked ? 'rgba(16, 185, 129, 0.5)' : 'rgba(239, 68, 68, 0.5)'}; background: ${isBlocked ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'}; color: ${isBlocked ? '#10b981' : '#ef4444'}; cursor: pointer; font-size: 0.8rem;">
+                            <i class="fas ${isBlocked ? 'fa-unlock' : 'fa-lock'}"></i> ${isBlocked ? 'Buka Blokir' : 'Blokir'}
+                        </button>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        async function toggleBlockStudent(id) {
+            if (!examControl.blocked_students) examControl.blocked_students = [];
+            const index = examControl.blocked_students.indexOf(id);
+            if (index > -1) {
+                examControl.blocked_students.splice(index, 1);
+                showToast('Blokir dibuka untuk ID ' + id);
+            } else {
+                examControl.blocked_students.push(id);
+                showToast('Siswa ID ' + id + ' diblokir!', true);
+            }
+            
+            // Sync with Supabase
+            const client = await getSupabase();
+            if (client) {
+                const { error } = await client.from('exam_settings').upsert({ id: 'master_config', data: examControl });
+                if (error) console.error('Gagal sync block list:', error);
+            }
+            
+            // Re-render
+            searchMasterStudent();
         }
 
 // === Expose functions to global scope for onclick handlers ===
@@ -3218,6 +3248,7 @@ window.printBAForm = printBAForm;
 window.submitBADoc = submitBADoc;
 window.loadRiwayatGlobal = loadRiwayatGlobal;
 window.loadRiwayatBA = loadRiwayatBA;
+window.toggleBlockStudent = toggleBlockStudent;
 window.authKurikulum = authKurikulum;
 window.showToast = showToast;
 window.saveControl = saveControl;
