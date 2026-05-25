@@ -3223,10 +3223,10 @@
             const index = examControl.blocked_students.indexOf(id);
             if (index > -1) {
                 examControl.blocked_students.splice(index, 1);
-                showToast('Blokir dibuka untuk ID ' + id);
+                showToast('Blokir dibuka untuk Nomor Peserta ' + id);
             } else {
                 examControl.blocked_students.push(id);
-                showToast('Siswa ID ' + id + ' diblokir!', true);
+                showToast('Siswa dengan Nomor Peserta ' + id + ' diblokir!', true);
             }
             
             // Sync with Supabase

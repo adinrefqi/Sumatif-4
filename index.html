@@ -248,10 +248,10 @@
                     <i class="fas fa-user login-input-icon"></i>
                     <input type="text" id="login-no-ujian" class="login-input" placeholder="Contoh: 2526001" autofocus>
                 </div>
-                <p class="login-helper-text">Masukkan ID yang tertera pada kartu peserta ujian</p>
+                <p class="login-helper-text">Masukkan Nomor Peserta yang tertera pada kartu ujian</p>
                 <button onclick="validateLogin()" class="login-btn">Masuk ke Sistem</button>
                 <div style="margin-top: 1.5rem;">
-                    <a href="javascript:void(0)" class="login-forgot-link" onclick="alert('Silakan lapor ke pengawas di ruangan Anda.')"><i class="fas fa-key"></i> Lupa ID? Hubungi Pengawas</a>
+                    <a href="javascript:void(0)" class="login-forgot-link" onclick="alert('Silakan lapor ke pengawas di ruangan Anda.')"><i class="fas fa-key"></i> Lupa Nomor Peserta? Hubungi Pengawas</a>
                 </div>
                 <p id="login-error">Nomor Ujian tidak ditemukan atau salah!</p>
             </div>
@@ -1281,7 +1281,7 @@
                         <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
                             <thead style="position: sticky; top: 0; background: #1e293b;">
                                 <tr style="text-align: left; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                    <th style="padding: 10px;">ID / Nomor</th>
+                                    <th style="padding: 10px;">Nomor Peserta</th>
                                     <th style="padding: 10px;">Nama Siswa</th>
                                     <th style="padding: 10px;">Kls/Rg</th>
                                 </tr>
@@ -1402,7 +1402,7 @@
             const btn = document.querySelector('.login-btn');
 
             if (!inputVal) {
-                showToast("Masukkan ID / Nomor Ujian!", "error");
+                showToast("Masukkan Nomor Peserta!", "error");
                 return;
             }
 
