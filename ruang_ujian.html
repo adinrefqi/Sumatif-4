@@ -838,8 +838,11 @@
                         const currSiswa = sessionStorage.getItem('nomorUjian');
                         if (currSiswa && examControl.blocked_students && examControl.blocked_students.includes(currSiswa)) {
                             sessionStorage.clear();
-                            alert("Ujian dihentikan secara paksa! Akun Anda diblokir oleh Pengawas. Silakan melapor.");
-                            window.location.href = 'index.html';
+                            // Overwrite DOM aggressively to hide PDF and show error (For Android ExamBrowser compatibility)
+                            document.body.innerHTML = '<div style="background:#ef4444;color:white;position:fixed;top:0;left:0;right:0;bottom:0;z-index:999999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:sans-serif;text-align:center;padding:20px;"><h1>UJIAN DIHENTIKAN!</h1><p style="font-size:1.2rem;">Akun Anda diblokir oleh Pengawas.</p><p>Silakan lapor ke meja pengawas segera.</p></div>';
+                            setTimeout(() => {
+                                window.location.replace('index.html');
+                            }, 3000);
                         }
                     }
                 })
