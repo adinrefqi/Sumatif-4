@@ -851,6 +851,7 @@
             <div class="header-title">
                 <div style="display: flex; align-items: center; gap: 1rem;">
                     <h1>Dashboard Pengawas</h1>
+                    <button onclick="openModal('modal-link-ujian'); muatDaftarLink();" class="filter-btn" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: #10b981; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 6px;"><i class="fas fa-link"></i> Link Soal</button>
                     <button onclick="logoutPengawas()" class="filter-btn" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: #ef4444; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 6px;"><i class="fas fa-sign-out-alt"></i> Keluar</button>
                 </div>
                 <p>Monitor real-time progres penyelesaian ujian siswa.</p>
@@ -1614,6 +1615,81 @@
             </div>
         </div>
 
+
+        <!-- ========== MODAL MANAJEMEN LINK UJIAN ========== -->
+        <div class="modal-overlay" id="modal-link-ujian">
+            <div class="admin-modal" style="max-width: 800px;">
+                <div class="admin-modal-header">
+                    <div class="admin-modal-title">
+                        <div class="admin-modal-icon green"><i class="fas fa-link"></i></div>
+                        <div>
+                            <h3>Manajemen Link Soal</h3>
+                            <p>Atur link ujian Google Form per mata pelajaran</p>
+                        </div>
+                    </div>
+                    <button class="admin-modal-close" onclick="closeModal('modal-link-ujian')"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="admin-modal-body">
+                    <div class="amf-row">
+                        <div class="amf-group">
+                            <label class="amf-label">Kelas <span class="amf-req">*</span></label>
+                            <select id="link-kelas" class="amf-input">
+                                <option value="7">Kelas 7</option>
+                                <option value="8">Kelas 8</option>
+                                <option value="9">Kelas 9</option>
+                            </select>
+                        </div>
+                        <div class="amf-group">
+                            <label class="amf-label">Mata Pelajaran <span class="amf-req">*</span></label>
+                            <select id="link-mapel" class="amf-input">
+                                <option value="agama-islam">Pendidikan Agama Islam</option>
+                                <option value="agama-kristen">Pendidikan Agama Kristen</option>
+                                <option value="agama-katolik">Pendidikan Agama Katolik</option>
+                                <option value="agama-budha">Pendidikan Agama Budha</option>
+                                <option value="agama-khonghucu">Pendidikan Agama Khonghucu</option>
+                                <option value="b-indo">Bahasa Indonesia</option>
+                                <option value="b-inggris">Bahasa Inggris</option>
+                                <option value="seni">Seni Budaya</option>
+                                <option value="matematika">Matematika</option>
+                                <option value="pjok">PJOK</option>
+                                <option value="ipa">IPA</option>
+                                <option value="ppkn">PPKn</option>
+                                <option value="ips">IPS</option>
+                                <option value="b-jawa">Bahasa Jawa</option>
+                                <option value="informatika">Informatika</option>
+                                <option value="b-mandarin">Bahasa Mandarin</option>
+                                <option value="bk">BK/BP</option>
+                                <option value="coding">Prakarya/Coding</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="amf-group">
+                        <label class="amf-label">Link Soal (Google Form URL) <span class="amf-req">*</span></label>
+                        <input type="text" id="link-url" class="amf-input" placeholder="https://docs.google.com/forms/d/e/.../viewform">
+                    </div>
+                    <button class="btn-main" onclick="simpanLinkUjian()" style="width: 100%; margin-bottom: 2rem;">
+                        <i class="fas fa-save"></i> Simpan Link
+                    </button>
+
+                    <div class="amf-divider"><span>Daftar Link Soal Tersimpan</span></div>
+                    <div class="table-card" style="margin-top: 1rem; max-height: 300px; overflow-y: auto;">
+                        <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                    <th style="padding: 10px;">Kelas</th>
+                                    <th style="padding: 10px;">Mata Pelajaran</th>
+                                    <th style="padding: 10px;">Link Soal</th>
+                                    <th style="padding: 10px;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-link-ujian">
+                                <tr><td colspan="4" style="text-align:center; padding: 10px;">Memuat data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- MODAL CONTROL PANEL KURIKULUM -->
         <div id="modal-kurikulum" class="modal-overlay" style="z-index: 22000;">
@@ -3261,6 +3337,84 @@ window.setControlGrade = setControlGrade;
 window.setGlobalStatus = setGlobalStatus;
 window.toggleSubject = toggleSubject;
 window.searchMasterStudent = searchMasterStudent;
+
+        // ========================================================
+        // MANAJEMEN LINK SOAL
+        // ========================================================
+        async function muatDaftarLink() {
+            try {
+                const tbody = document.getElementById('tbody-link-ujian');
+                if(!tbody) return;
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Memuat data...</td></tr>';
+                const { data, error } = await supabase.from('link_ujian').select('*').order('kelas').order('mapel');
+                if (error) throw error;
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Belum ada link yang tersimpan.</td></tr>';
+                    return;
+                }
+                
+                let html = '';
+                data.forEach(item => {
+                    html += `<tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <td style="padding: 10px;">Kelas ${item.kelas}</td>
+                        <td style="padding: 10px;">${item.mapel}</td>
+                        <td style="padding: 10px;"><a href="${item.link_soal}" target="_blank" style="color: #60a5fa;">Buka Link</a></td>
+                        <td style="padding: 10px;"><button onclick="hapusLinkUjian(${item.id})" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Hapus</button></td>
+                    </tr>`;
+                });
+                tbody.innerHTML = html;
+            } catch (err) {
+                console.error(err);
+                alert("Gagal memuat daftar link: " + err.message);
+            }
+        }
+
+        async function simpanLinkUjian() {
+            try {
+                const kelas = document.getElementById('link-kelas').value;
+                const mapel = document.getElementById('link-mapel').value;
+                const link = document.getElementById('link-url').value;
+                
+                if (!link) {
+                    alert("URL tidak boleh kosong!");
+                    return;
+                }
+                
+                // Cek apakah sudah ada
+                const { data: existing } = await supabase.from('link_ujian').select('id').eq('kelas', kelas).eq('mapel', mapel).maybeSingle();
+                
+                if (existing) {
+                    const { error } = await supabase.from('link_ujian').update({ link_soal: link }).eq('id', existing.id);
+                    if (error) throw error;
+                } else {
+                    const { error } = await supabase.from('link_ujian').insert([{ kelas: kelas, mapel: mapel, link_soal: link }]);
+                    if (error) throw error;
+                }
+                
+                alert("Link berhasil disimpan!");
+                document.getElementById('link-url').value = '';
+                muatDaftarLink();
+            } catch (err) {
+                console.error(err);
+                alert("Gagal menyimpan link: " + err.message);
+            }
+        }
+
+        async function hapusLinkUjian(id) {
+            if (!confirm("Apakah Anda yakin ingin menghapus link ini?")) return;
+            try {
+                const { error } = await supabase.from('link_ujian').delete().eq('id', id);
+                if (error) throw error;
+                muatDaftarLink();
+            } catch (err) {
+                console.error(err);
+                alert("Gagal menghapus link: " + err.message);
+            }
+        }
+
+        window.muatDaftarLink = muatDaftarLink;
+        window.simpanLinkUjian = simpanLinkUjian;
+        window.hapusLinkUjian = hapusLinkUjian;
 
         // Jalankan Segera
         init();
