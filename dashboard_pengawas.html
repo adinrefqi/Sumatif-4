@@ -3359,7 +3359,10 @@ window.searchMasterStudent = searchMasterStudent;
                         <td style="padding: 10px;">Kelas ${item.kelas}</td>
                         <td style="padding: 10px;">${item.mapel}</td>
                         <td style="padding: 10px;"><a href="${item.link_soal}" target="_blank" style="color: #60a5fa;">Buka Link</a></td>
-                        <td style="padding: 10px;"><button onclick="hapusLinkUjian(${item.id})" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Hapus</button></td>
+                        <td style="padding: 10px;">
+                            <button onclick="editLinkUjian('${item.kelas}', '${item.mapel}', '${item.link_soal}')" style="background:#3b82f6; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; margin-right: 4px;">Edit</button>
+                            <button onclick="hapusLinkUjian(${item.id})" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">Hapus</button>
+                        </td>
                     </tr>`;
                 });
                 tbody.innerHTML = html;
@@ -3412,9 +3415,17 @@ window.searchMasterStudent = searchMasterStudent;
             }
         }
 
+        function editLinkUjian(kelas, mapel, link) {
+            document.getElementById('link-kelas').value = kelas;
+            document.getElementById('link-mapel').value = mapel;
+            document.getElementById('link-url').value = link;
+            document.getElementById('link-url').focus();
+        }
+
         window.muatDaftarLink = muatDaftarLink;
         window.simpanLinkUjian = simpanLinkUjian;
         window.hapusLinkUjian = hapusLinkUjian;
+        window.editLinkUjian = editLinkUjian;
 
         // Jalankan Segera
         init();
