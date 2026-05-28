@@ -856,13 +856,13 @@
                 </div>
                 <p>Monitor real-time progres penyelesaian ujian siswa.</p>
                 <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                    <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); padding: 0.4rem 0.8rem; border-radius: 10px; font-size: 0.75rem; color: #818cf8;">
+                    <div class="session-btn" data-session="S1" onclick="setSessionFilter('S1')" style="cursor: pointer; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); padding: 0.4rem 0.8rem; border-radius: 10px; font-size: 0.75rem; color: #818cf8; transition: all 0.2s; opacity: 0.6;">
                         <b>S1:</b> 07.15-08.45
                     </div>
-                    <div style="background: rgba(167, 139, 250, 0.1); border: 1px solid rgba(167, 139, 250, 0.2); padding: 0.4rem 0.8rem; border-radius: 10px; font-size: 0.75rem; color: #a78bfa;">
+                    <div class="session-btn" data-session="S2" onclick="setSessionFilter('S2')" style="cursor: pointer; background: rgba(167, 139, 250, 0.1); border: 1px solid rgba(167, 139, 250, 0.2); padding: 0.4rem 0.8rem; border-radius: 10px; font-size: 0.75rem; color: #a78bfa; transition: all 0.2s; opacity: 0.6;">
                         <b>S2:</b> 09.15-10.45
                     </div>
-                    <div style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.2); padding: 0.4rem 0.8rem; border-radius: 10px; font-size: 0.75rem; color: #fbbf24;">
+                    <div class="session-btn" data-session="S3" onclick="setSessionFilter('S3')" style="cursor: pointer; background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.2); padding: 0.4rem 0.8rem; border-radius: 10px; font-size: 0.75rem; color: #fbbf24; transition: all 0.2s; opacity: 0.6;">
                         <b>S3:</b> 11.00-12.00
                     </div>
                 </div>
@@ -1797,6 +1797,7 @@
         let studentsData = [];
         let studentMasterList = [];
         let currentFilter = 'ALL';
+        let currentSessionFilter = 'ALL';
         
         // Initialize selectedDate with Local Date immediately to avoid race conditions
         const nowInit = new Date();
@@ -2367,13 +2368,53 @@
             // 2. Filter Tanggal
             if (selectedDate) {
                 filtered = filtered.filter(item => {
-                    // Convert created_at to local date YYYY-MM-DD
                     const d = new Date(item.created_at);
                     const localDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
                     return localDate === selectedDate;
                 });
             }
+
+            // 3. Filter Sesi
+            if (currentSessionFilter && currentSessionFilter !== 'ALL') {
+                filtered = filtered.filter(item => {
+                    const d = new Date(item.created_at);
+                    const hours = d.getHours();
+                    const minutes = d.getMinutes();
+                    const timeNum = hours * 100 + minutes;
+
+                    if (currentSessionFilter === 'S1') return timeNum < 900;
+                    if (currentSessionFilter === 'S2') return timeNum >= 900 && timeNum < 1100;
+                    if (currentSessionFilter === 'S3') return timeNum >= 1100;
+                    return true;
+                });
+            }
             return filtered;
+        }
+
+        window.setSessionFilter = function(session) {
+            if (currentSessionFilter === session) {
+                currentSessionFilter = 'ALL';
+            } else {
+                currentSessionFilter = session;
+            }
+            updateSessionFilterUI();
+            updateStats();
+            renderTable();
+        }
+
+        function updateSessionFilterUI() {
+            document.querySelectorAll('.session-btn').forEach(btn => {
+                const session = btn.getAttribute('data-session');
+                if (session === currentSessionFilter) {
+                    btn.style.opacity = '1';
+                    btn.style.transform = 'scale(1.05)';
+                    btn.style.boxShadow = '0 0 8px ' + window.getComputedStyle(btn).color;
+                } else {
+                    btn.style.opacity = '0.6';
+                    btn.style.transform = 'scale(1)';
+                    btn.style.boxShadow = 'none';
+                }
+            });
         }
 
         window.setFilter = function (filter) {
@@ -3480,6 +3521,40 @@ window.searchMasterStudent = searchMasterStudent;
             document.getElementById('link-url').value = link;
             document.getElementById('link-url').focus();
         }
+
+        
+        // === Expose functions to global scope for onclick handlers ===
+        window.openModal = typeof openModal !== 'undefined' ? openModal : null;
+        window.closeModal = typeof closeModal !== 'undefined' ? closeModal : null;
+        window.clearSig = typeof clearSig !== 'undefined' ? clearSig : null;
+        window.printBAForm = typeof printBAForm !== 'undefined' ? printBAForm : null;
+        window.submitBADoc = typeof submitBADoc !== 'undefined' ? submitBADoc : null;
+        window.loadRiwayatGlobal = typeof loadRiwayatGlobal !== 'undefined' ? loadRiwayatGlobal : null;
+        window.loadRiwayatBA = typeof loadRiwayatBA !== 'undefined' ? loadRiwayatBA : null;
+        window.toggleBlockStudent = typeof toggleBlockStudent !== 'undefined' ? toggleBlockStudent : null;
+        window.authKurikulum = typeof authKurikulum !== 'undefined' ? authKurikulum : null;
+        window.showToast = typeof showToast !== 'undefined' ? showToast : null;
+        window.saveControl = typeof saveControl !== 'undefined' ? saveControl : null;
+        window.renderControlList = typeof renderControlList !== 'undefined' ? renderControlList : null;
+        window.printPresensiForm = typeof printPresensiForm !== 'undefined' ? printPresensiForm : null;
+        window.saveBADraft = typeof saveBADraft !== 'undefined' ? saveBADraft : null;
+        window.loadBADraft = typeof loadBADraft !== 'undefined' ? loadBADraft : null;
+        window.fillBAForm = typeof fillBAForm !== 'undefined' ? fillBAForm : null;
+        window.setControlGrade = typeof setControlGrade !== 'undefined' ? setControlGrade : null;
+        window.setGlobalStatus = typeof setGlobalStatus !== 'undefined' ? setGlobalStatus : null;
+        window.toggleSubject = typeof toggleSubject !== 'undefined' ? toggleSubject : null;
+        window.searchMasterStudent = typeof searchMasterStudent !== 'undefined' ? searchMasterStudent : null;
+        
+        window.logoutPengawas = typeof logoutPengawas !== 'undefined' ? logoutPengawas : null;
+        window.setFilter = typeof setFilter !== 'undefined' ? setFilter : null;
+        window.setDateFilter = typeof setDateFilter !== 'undefined' ? setDateFilter : null;
+        window.printPresensiDaftarHadir = typeof printPresensiDaftarHadir !== 'undefined' ? printPresensiDaftarHadir : null;
+        window.printFromRiwayat = typeof printFromRiwayat !== 'undefined' ? printFromRiwayat : null;
+        window.sendBroadcast = typeof sendBroadcast !== 'undefined' ? sendBroadcast : null;
+        window.toggleSound = typeof toggleSound !== 'undefined' ? toggleSound : null;
+        window.toggleOnlineList = typeof toggleOnlineList !== 'undefined' ? toggleOnlineList : null;
+        window.toggleAbsentList = typeof toggleAbsentList !== 'undefined' ? toggleAbsentList : null;
+        window.resetSiswa = typeof resetSiswa !== 'undefined' ? resetSiswa : null;
 
         window.muatDaftarLink = muatDaftarLink;
         window.simpanLinkUjian = simpanLinkUjian;
