@@ -117,6 +117,13 @@ body {
     padding: 0 2rem;
 }
 
+/* Bug 1 fix: Reduce container padding on mobile */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+}
+
 /* Custom Smooth Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
@@ -479,6 +486,14 @@ body {
     text-align: left;
 }
 
+/* Bug 4 fix: Remove fixed width on mobile to prevent overflow */
+@media (max-width: 768px) {
+    .status-text .value {
+        width: auto;
+        font-size: 1.2rem;
+    }
+}
+
 .status-divider {
     width: 1px;
     height: 50px;
@@ -525,6 +540,14 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2.2rem;
+}
+
+/* Bug 5 fix: Smaller card minimum on mobile */
+@media (max-width: 480px) {
+    .schedule-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
 }
 
 .exam-card {
@@ -675,6 +698,16 @@ body {
     padding: 0.65rem 0.4rem !important;
     font-size: 0.8rem !important;
     min-width: 70px;
+}
+
+/* Bug 8 fix: 2-column religion buttons on small screens */
+@media (max-width: 480px) {
+    .religion-btn {
+        flex: 1 1 calc(50% - 0.5rem);
+        min-width: 60px;
+        font-size: 0.72rem !important;
+        padding: 0.5rem 0.3rem !important;
+    }
 }
 
 /* Custom Schedule Layout (Info Only) */
@@ -984,11 +1017,15 @@ footer {
     .hero {
         text-align: center;
         height: auto;
-        padding: 10rem 0 5rem;
+        padding: 7rem 0 3rem;
     }
 
     .hero h1 {
-        font-size: 2.8rem;
+        font-size: 2.2rem;
+    }
+
+    .hero p {
+        font-size: 0.95rem;
     }
 
     .hero-btns {
@@ -1076,6 +1113,8 @@ footer {
     opacity: 0;
     visibility: hidden;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Bug 6 fix: padding for mobile */
+    padding: 0.5rem;
 }
 
 .modal-overlay.active {
@@ -1205,11 +1244,24 @@ textarea.form-control {
     opacity: 0;
     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border: 1px solid rgba(255, 255, 255, 0.08);
+    max-width: calc(100vw - 2rem);
 }
 
 .toast.show {
     transform: translateY(0);
     opacity: 1;
+}
+
+/* Bug 17 fix: Full-width toast on mobile */
+@media (max-width: 480px) {
+    .toast {
+        left: 1rem;
+        right: 1rem;
+        bottom: 1rem;
+        text-align: center;
+        padding: 0.9rem 1.2rem;
+        font-size: 0.9rem;
+    }
 }
 
 /* ============================================
@@ -1486,6 +1538,7 @@ textarea.form-control {
     width: 100%;
     max-width: 780px;
     max-height: 92vh;
+    max-height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 1rem);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -2290,5 +2343,134 @@ select.amf-input option {
 @media (max-width: 640px) {
     .amf-sigpad-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Bug 19 fix: Taller signature pads on mobile for better touch */
+@media (max-width: 768px) {
+    .amf-sig-wrap {
+        height: 160px;
+    }
+
+    .large-sig-wrap {
+        height: 180px;
+    }
+}
+
+/* Bug 20 fix: Table cells allow wrapping on mobile */
+@media (max-width: 768px) {
+    .amf-table td,
+    .amf-table th {
+        white-space: normal;
+        word-break: break-word;
+    }
+}
+
+/* ============================================
+   EXTRA SMALL SCREENS (< 480px)
+   ============================================ */
+@media (max-width: 480px) {
+    .hero {
+        padding: 6rem 0 2.5rem;
+    }
+
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero p {
+        font-size: 0.85rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.6rem;
+    }
+
+    .section-header p {
+        font-size: 0.9rem;
+    }
+
+    .section {
+        padding: 3rem 0;
+    }
+
+    .exam-card {
+        padding: 1.5rem 1.2rem;
+        border-radius: 18px;
+    }
+
+    .exam-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .btn-card {
+        padding: 0.7rem;
+        font-size: 0.85rem;
+    }
+
+    .card-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .modal-content {
+        padding: 1.5rem;
+        border-radius: 18px;
+    }
+
+    .admin-modal {
+        border-radius: 16px;
+        max-height: calc(100vh - 1rem);
+    }
+
+    .admin-modal-body {
+        padding: 1.2rem 1rem;
+    }
+
+    .admin-modal-header {
+        padding: 1rem 1.2rem;
+    }
+
+    .admin-modal-footer {
+        padding: 1rem 1.2rem;
+    }
+
+    .admin-modal-title h3 {
+        font-size: 1.05rem;
+    }
+
+    .tab-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.82rem;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.4rem 1rem;
+    }
+
+    .status-content {
+        padding: 1rem;
+        border-radius: 16px;
+    }
+
+    .status-item i {
+        font-size: 1.6rem;
+    }
+
+    .jadwal-day-card .day-content {
+        padding: 1.2rem;
+    }
+
+    .day-header {
+        padding: 0.9rem 1.2rem;
+        font-size: 1rem;
+    }
+
+    footer {
+        padding: 3rem 0 1.5rem;
     }
 }

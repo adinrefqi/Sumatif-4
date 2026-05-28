@@ -449,6 +449,11 @@
 /* Show on mobile */
 @media (max-width: 767.98px) {
   .bottom-nav { display: flex; }
+
+  /* Bug 15 fix: Prevent bottom nav from covering content */
+  body {
+    padding-bottom: 4rem;
+  }
 }
 
 /* Hide on scroll-down */
@@ -520,6 +525,17 @@
   gap: 0.65rem;
   pointer-events: none;        /* pass clicks through to content */
   max-width: min(380px, 92vw);
+}
+
+/* Bug 18 fix: Full-width toast stack on mobile */
+@media (max-width: 480px) {
+  .toast-stack {
+    top: auto;
+    bottom: 5rem; /* above bottom nav */
+    left: 0.75rem;
+    right: 0.75rem;
+    max-width: none;
+  }
 }
 
 /* ---- Base toast ---- */
@@ -954,6 +970,22 @@
   background: rgba(244, 63, 94, 0.2);
   color: var(--accent);
   box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.2);
+}
+
+/* Bug 9 fix: Smaller grade buttons on mobile */
+@media (max-width: 480px) {
+  .grade-btn-7,
+  .grade-btn-8,
+  .grade-btn-9 {
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 1.2rem;
+    border-radius: 0.8rem;
+  }
+
+  .grade-card {
+    padding: 1.5rem;
+  }
 }
 
 

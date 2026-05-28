@@ -906,7 +906,7 @@
         </header>
 
         <!-- ADMIN MENU CARDS (Berita Acara, Riwayat Global, Panel Kurikulum) -->
-        <div class="class-stats-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+        <div class="class-stats-grid" style="gap: 1.5rem;">
             <div class="exam-card admin-card-amber">
                 <div class="card-status admin-badge-amber">Guru</div>
                 <div class="card-icon admin-icon-amber">
@@ -1105,7 +1105,7 @@
 
             <div class="broadcast-input-group" style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <input type="text" id="broadcast-msg" placeholder="Ketik pesan untuk semua siswa..."
-                    style="flex: 1; min-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px 15px; border-radius: 12px; color: white; outline: none; transition: border 0.3s;"
+                    style="flex: 1; min-width: 150px; width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 12px 15px; border-radius: 12px; color: white; outline: none; transition: border 0.3s;"
                     onfocus="this.style.borderColor='var(--primary)'"
                     onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
                 <button onclick="sendBroadcast()" class="broadcast-btn"
@@ -1126,7 +1126,7 @@
                 <button class="filter-btn" onclick="setFilter('R3')">R3</button>
             </div>
 
-            <div style="display: flex; gap: 10px; align-items: center;">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                 <input type="date" id="date-filter" class="filter-btn" onchange="setDateFilter(this.value)"
                     style="padding: 6px 12px;">
                 <button id="sound-toggle" class="audio-toggle" onclick="toggleSound()">
@@ -1139,7 +1139,7 @@
         </div>
 
         <!-- CLASS STATS -->
-        <div class="class-stats-grid" style="grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
+        <div class="class-stats-grid" style="gap: 1rem; margin-bottom: 2rem;">
             <div class="class-stat-card" style="border-left: 4px solid #1d4ed8;">
                 <div class="class-stat-icon"><i class="fas fa-door-open"></i></div>
                 <div class="class-stat-info">
@@ -1232,8 +1232,8 @@
             border: 1px solid #333;
             max-height: 150px;
             overflow-y: auto;
-            display: block;
-            /* Selalu tampilkan untuk saat ini agar mudah diagnosa */
+            display: none;
+            /* Sembunyikan untuk production */
         }
         /* EXTRA MOBILE OPTIMIZATIONS */
         @media (max-width: 768px) {
@@ -2637,109 +2637,170 @@
         }
 
         // Fungsi print Daftar Hadir - cetak dalam format tabel 20 baris
-        async function printPresensiForm() {
-            const mapel = document.getElementById('ba-mapel').value || '...';
-            const hari = document.getElementById('ba-hari').value || '...';
-            const tglRaw = document.getElementById('ba-tanggal-full').value;
-            const tglDate = tglRaw ? new Date(tglRaw) : null;
-            const tglAngka = tglDate ? tglDate.getDate() : '...';
-            const bulan = tglDate ? tglDate.toLocaleDateString('id-ID', { month: 'long' }) : '...';
-            const tahun = tglDate ? tglDate.getFullYear() : '...';
-            const ruang = document.getElementById('ba-ruang').value || '...';
-            const pFull = document.getElementById('ba-pukul').value || ' - ';
-            const pParts = pFull.split(' - ');
-            const pMulai = pParts[0] || '...';
-            const pSelesai = pParts[1] || '...';
-            const jmlSehr = document.getElementById('ba-jml-seharusnya').value || '...';
-            const jmlHdr = document.getElementById('ba-jml-hadir').value || '...';
-            const nomHdr = document.getElementById('ba-nomor-hadir').value || '-';
-            const jmlTdk = document.getElementById('ba-jml-tidak-hadir').value || '...';
-            const nomTdk = document.getElementById('ba-nomor-tidak-hadir').value || '-';
-            const lSoal = document.getElementById('ba-lembar-soal').value || '...';
-            const lBA = document.getElementById('ba-lembar-ba').value || '...';
-            const lJwb = document.getElementById('ba-lembar-jawab').value || '...';
-            const catatan = document.getElementById('ba-catatan').value || '-';
-            const p1Nama = document.getElementById('ba-p1-nama').value;
-            const p1Niy = document.getElementById('ba-p1-niy').value;
-            const p2Nama = document.getElementById('ba-p2-nama').value;
-            const p2Niy = document.getElementById('ba-p2-niy').value;
+        async function printPresensiDaftarHadir(mapel, tglRaw) {
+            if (!mapel || !tglRaw) {
+                showToast('Pilih Mapel & Tanggal dulu untuk mencetak!', true);
+                return;
+            }
 
-            // Get signature images
-            const p1TtdImg = (sigPads['ba-sig-p1'] && !sigPads['ba-sig-p1'].isEmpty()) ? `<img src="${sigPads['ba-sig-p1'].toDataURL()}" style="height:50px; filter: brightness(0);">` : '';
-            const p2TtdImg = (sigPads['ba-sig-p2'] && !sigPads['ba-sig-p2'].isEmpty()) ? `<img src="${sigPads['ba-sig-p2'].toDataURL()}" style="height:50px; filter: brightness(0);">` : '';
+            const printWin = window.open('', '_blank', 'width=860,height=950');
+            printWin.document.write('<html><head><title>Memuat...</title></head><body><p style="font-family:sans-serif;text-align:center;margin-top:50px;">Sedang menyiapkan dokumen pendaftaran...</p></body></html>');
 
-            const printWin = window.open('', '_blank', 'width=820,height=900');
-            printWin.document.write(`<!DOCTYPE html><html><head>
-                <meta charset="UTF-8"><title>Berita Acara - ${mapel}</title>
-                <style>
-                    @page { margin: 12mm 14mm; }
-                    body { font-family: 'Times New Roman', serif; font-size: 11pt; color: #000; margin:0; }
-                    .header { display:flex; align-items:center; gap:12px; margin-bottom:6px; }
-                    .logo { height:65px; width:auto; }
-                    .ht { text-align:center; flex:1; }
-                    .ht .yayasan { font-size:11pt; font-weight:bold; }
-                    .ht .sekolah { font-size:15pt; font-weight:bold; }
-                    .ht .info { font-size:9pt; }
-                    hr { border:0; border-top:3px double black; margin:6px 0 10px; }
-                    h2 { text-align:center; font-size:13pt; margin:4px 0 2px; }
-                    .mapel-row { text-align:center; margin:8px 0 6px; font-size:11pt; }
-                    p { margin:5px 0; font-size:10.5pt; line-height:1.8; }
-                    .field { display:flex; gap:4px; margin:5px 0; }
-                    .label { min-width:200px; flex-shrink:0; }
-                    .pengawas { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:18px; font-size:10.5pt; }
-                    .pg-title { font-weight:bold; text-decoration:underline; margin-bottom:8px; }
-                    .ttd-box { height:50px; border-bottom:1px solid #000; margin:4px 0; display:flex; align-items:center; }
-                    .italic { font-style:italic; text-align:center; margin-top:10px; }
-                    .pg-line { margin: 3px 0; }
-                </style>
-            </head><body>
-                <div class="header">
-                    <img class="logo" src="logo.jpg">
-                    <div class="ht">
-                        <div class="yayasan">YAYASAN TRI DHARMA TEGAL</div>
-                        <div class="sekolah">SMP TUNAS HIDUP HARAPAN KITA</div>
-                        <div class="info">Jalan Gurami Nomor 6 Kota Tegal, Telepon (0283) 6146846</div>
-                        <div class="info">e-mail: smpthhk.tegal@gmail.com</div>
-                    </div><div style="width:70px"></div>
-                </div>
-                <hr>
-                <h2>BERITA ACARA</h2>
-                <h2>PENYELENGGARAAN SUMATIF IV</h2>
-                <h2>TAHUN PELAJARAN 2025/2026</h2>
-                <div class="mapel-row">MATA PELAJARAN &nbsp; : &nbsp; <b>${mapel}</b></div>
-                <p>Pada hari ini <b>${hari}</b>, Tanggal <b>${tglAngka}</b> Bulan <b>${bulan}</b> Tahun <b>${tahun}</b></p>
-                <p><b>a.</b></p>
-                <div class="field"><span class="label">Telah diselenggarakan dari Pukul</span><span>: ${pMulai} sampai pukul ${pSelesai}</span></div>
-                <div class="field"><span class="label">Sekolah</span><span>: SMP TUNAS HIDUP HARAPAN KITA</span></div>
-                <div class="field"><span class="label">Ruang</span><span>: ${ruang}</span></div>
-                <div class="field"><span class="label">Alamat</span><span>: Jalan Gurami Nomor 6 Kota Tegal</span></div>
-                <div class="field"><span class="label">Jumlah Peserta Seharusnya</span><span>: ${jmlSehr} Orang</span></div>
-                <div class="field"><span class="label">Yang Hadir</span><span>: ${jmlHdr} Orang</span></div>
-                <div class="field"><span class="label">Yakni Nomor</span><span>: ${nomHdr}</span></div>
-                <div class="field"><span class="label">Yang Tidak Hadir</span><span>: ${jmlTdk} Orang</span></div>
-                <div class="field"><span class="label">Yakni Nomor</span><span>: ${nomTdk}</span></div>
-                <p><b>b.</b></p>
-                <p>Sampul soal mata pelajaran <b>${mapel}</b> telah dibuka di ruang tersebut dengan disaksikan oleh para peserta yang berisi lembar soal sebanyak <b>${lSoal}</b> Eksemplar, lembar berita acara dan daftar hadir sebanyak <b>${lBA}</b> Eksemplar, Lembar Jawab sebanyak <b>${lJwb}</b> eksemplar.</p>
-                <div class="field" style="margin-top:8px;align-items:flex-start;"><span class="label">Catatan selama pelaksanaan</span><span>: ${catatan}</span></div>
-                <p class="italic">Berita acara ini dibuat dengan sesungguhnya.</p>
-                <div class="pengawas">
-                    <div><div class="pg-title">Pengawas 1</div>
-                        <p class="pg-line">1. Tanda Tangan :</p>
-                        <div class="ttd-box">${p1TtdImg}</div>
-                        <p class="pg-line">2. Nama &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${p1Nama}</p>
-                        <p class="pg-line">3. N I Y &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${p1Niy}</p>
-                    </div>
-                    <div><div class="pg-title">Pengawas 2</div>
-                        <p class="pg-line">1. Tanda Tangan :</p>
-                        <div class="ttd-box">${p2TtdImg}</div>
-                        <p class="pg-line">2. Nama &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${p2Nama}</p>
-                        <p class="pg-line">3. N I Y &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${p2Niy}</p>
-                    </div>
-                </div>
-            </body></html>`);
-            printWin.document.close();
-            setTimeout(() => { printWin.print(); }, 500);
+            showToast('Menyiapkan dokumen cetak...', false);
+
+            try {
+                const client = await getSupabase();
+                // Tarik SEMUA data (Siswa + Pengawas) untuk sesi ini
+                const { data: allRows, error } = await client.from('presensi_siswa')
+                    .select('*')
+                    .eq('mata_pelajaran', mapel)
+                    .eq('tanggal', tglRaw);
+
+                if (error) throw error;
+
+                if (!allRows || allRows.length === 0) {
+                    printWin.close();
+                    showToast('Data belum ditemukan di database!', true);
+                    return;
+                }
+
+                // Pisahkan data pengawas dan siswa
+                const sessionMeta = allRows.find(r => r.ruang === 'SESSION_METADATA') || {};
+                const studentRows = allRows.filter(r => r.ruang !== 'SESSION_METADATA');
+
+                const tgl = new Date(tglRaw).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+                const pukul = sessionMeta.pukul || '...';
+                const p1Nama = sessionMeta.pengawas_1_nama || '';
+                const p1Niy = sessionMeta.pengawas_1_niy || '';
+                const p2Nama = sessionMeta.pengawas_2_nama || '';
+                const p2Niy = sessionMeta.pengawas_2_niy || '';
+
+                const p1TtdImg = sessionMeta.p1_ttd ? `<img src="${sessionMeta.p1_ttd}" style="height:50px; filter: brightness(0);">` : '';
+                const p2TtdImg = sessionMeta.p2_ttd ? `<img src="${sessionMeta.p2_ttd}" style="height:50px; filter: brightness(0);">` : '';
+
+                // Kelompokkan siswa per ruang (R1, R2, R3)
+                const dataSiswaMap = { R1: [], R2: [], R3: [] };
+
+                // Urutkan studentRows berdasarkan created_at untuk mendapatkan urutan nomor otomatis
+                studentRows.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+                studentRows.forEach(row => {
+                    const r = row.ruang;
+                    if (dataSiswaMap[r]) {
+                        // Jika format baru, data_siswa adalah objek tunggal
+                        if (row.data_siswa && !Array.isArray(row.data_siswa)) {
+                            dataSiswaMap[r].push(row.data_siswa);
+                        } else if (Array.isArray(row.data_siswa)) {
+                            // Support format lama (array dalam 1 row)
+                            dataSiswaMap[r] = dataSiswaMap[r].concat(row.data_siswa);
+                        }
+                    }
+                });
+
+                const roomColors = { R1: '#1d4ed8', R2: '#7c3aed', R3: '#b45309' };
+                let pages = '';
+                
+                // Asumsi ROOMS
+                const validRooms = typeof ROOMS !== 'undefined' ? ROOMS : ['R1', 'R2', 'R3'];
+
+                validRooms.forEach((r, idx) => {
+                    const list = dataSiswaMap[r] || [];
+                    if (list.length === 0 && studentRows.length > 0) return;
+
+                    let rows = '';
+                    for (let i = 1; i <= 25; i++) {
+                        const item = list[i - 1] || {};
+                        const stuTtdImg = item.ttd ? `<img src="${item.ttd}" style="height:35px; filter: brightness(0);">` : '&nbsp;';
+                        rows += `<tr><td style="text-align:center">${i}</td><td>${item.nomor_peserta || ''}</td><td>${item.nama || ''}</td><td style="text-align:center; padding:0;">${stuTtdImg}</td></tr>`;
+                    }
+
+                    pages += `
+                    <div class="page${pages.length > 0 ? ' page-break' : ''}">
+                        <div class="header">
+                            <img class="logo" src="logo.jpg">
+                            <div class="ht">
+                                <div class="yayasan">YAYASAN TRI DHARMA TEGAL</div>
+                                <div class="sekolah">SMP TUNAS HIDUP HARAPAN KITA</div>
+                                <div class="info">Jalan Gurami Nomor 6 Kota Tegal, Telepon (0283) 6146846</div>
+                                <div class="info">e-mail: smpthhk.tegal@gmail.com</div>
+                            </div><div style="width:70px"></div>
+                        </div>
+                        <hr>
+                        <h2>DAFTAR HADIR</h2>
+                        <h2>PENYELENGGARAAN SUMATIF IV</h2>
+                        <h2>TAHUN PELAJARAN 2025/2026</h2>
+                        <div class="room-badge" style="background:${roomColors[r] || '#1d4ed8'}">RUANG ${r}</div>
+                        <div class="meta">
+                            <div>Mata Pelajaran &nbsp;: <b>${mapel}</b></div>
+                            <div>Tanggal &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${tgl}</div>
+                            <div>Sekolah &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: SMP TUNAS HIDUP HARAPAN KITA</div>
+                            <div>Ruang &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <b>${r}</b></div>
+                            <div>Pukul &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${pukul}</div>
+                        </div>
+                        <table>
+                            <thead><tr><th style="width:35px">No.</th><th style="width:120px">Nomor Peserta</th><th>Nama</th><th style="width:140px">Tanda Tangan</th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                        <div class="pengawas">
+                            <div><div class="pg-title">Pengawas 1</div>
+                                <div class="pg-line">1. Tanda Tangan :</div>
+                                <div class="ttd-box">${p1TtdImg}</div>
+                                <div class="pg-line">2. Nama &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${p1Nama}</div>
+                                <div class="pg-line">3. N I Y &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${p1Niy}</div>
+                            </div>
+                            <div><div class="pg-title">Pengawas 2</div>
+                                <div class="pg-line">1. Tanda Tangan :</div>
+                                <div class="ttd-box">${p2TtdImg}</div>
+                                <div class="pg-line">2. Nama &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${p2Nama}</div>
+                                <div class="pg-line">3. N I Y &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${p2Niy}</div>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+
+                if (!pages) {
+                    printWin.close();
+                    showToast('Tidak ada data siswa untuk dicetak!', true);
+                    return;
+                }
+
+                printWin.document.open();
+                printWin.document.write(`<!DOCTYPE html><html><head>
+                    <meta charset="UTF-8"><title>Daftar Hadir - ${mapel}</title>
+                    <style>
+                        @page { margin: 12mm 14mm; }
+                        body { font-family: 'Times New Roman', serif; font-size: 11pt; color: #000; margin:0; }
+                        .page-break { page-break-before: always; }
+                        .header { display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+                        .logo { height:65px; width:auto; }
+                        .ht { text-align:center; flex:1; }
+                        .ht .yayasan { font-size:11pt; font-weight:bold; }
+                        .ht .sekolah { font-size:15pt; font-weight:bold; }
+                        .ht .info { font-size:9pt; }
+                        hr { border:0; border-top:3px double black; margin:6px 0 8px; }
+                        h2 { text-align:center; font-size:13pt; margin:3px 0 2px; }
+                        .room-badge { display:inline-block; color:white; font-size:11pt; font-weight:bold;
+                            padding:3px 18px; border-radius:20px; margin:6px auto 8px; display:block; text-align:center; width:fit-content; }
+                        .meta { display:grid; grid-template-columns:1fr 1fr; gap:3px 20px; margin:8px 0 10px; font-size:10.5pt; }
+                        table { width:100%; border-collapse:collapse; font-size:10pt; }
+                        th,td { border:1px solid black; padding:3px 5px; }
+                        th { background:#f0f0f0; text-align:center; }
+                        .pengawas { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px; font-size:10.5pt; }
+                        .pg-title { font-weight:bold; text-decoration:underline; margin-bottom:8px; }
+                        .pg-line { margin:3px 0; }
+                        .ttd-box { height:50px; border-bottom:1px solid #000; margin:4px 0; }
+                    </style>
+                </head><body>${pages}</body></html>`);
+                printWin.document.close();
+                setTimeout(() => { printWin.print(); }, 500);
+
+            } catch (err) {
+                console.error('Print error:', err);
+                if (printWin) printWin.close();
+                showToast('Gagal memproses data cetak!', true);
+            }
         }
+
 
         function printBAForm() {
             const mapel = document.getElementById('ba-mapel').value || '...';
@@ -2960,9 +3021,7 @@
 
         // Jalankan cetak dari tabel riwayat
         window.printFromRiwayat = function (mapel, tgl) {
-            document.getElementById('dh-mapel').value = mapel;
-            document.getElementById('dh-tanggal').value = tgl;
-            printPresensiForm();
+            printPresensiDaftarHadir(mapel, tgl);
         }
 
         // ======= RIWAYAT TABS & BA HISTORY =======
@@ -3329,7 +3388,7 @@ window.authKurikulum = authKurikulum;
 window.showToast = showToast;
 window.saveControl = saveControl;
 window.renderControlList = renderControlList;
-window.printPresensiForm = printPresensiForm;
+window.printPresensiDaftarHadir = printPresensiDaftarHadir;
 window.saveBADraft = saveBADraft;
 window.loadBADraft = loadBADraft;
 window.fillBAForm = fillBAForm;
