@@ -41,6 +41,11 @@
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="enhancements.css">
+    <!-- WebView Performance Patch (harus terakhir agar override) -->
+    <link rel="stylesheet" href="webview-perf.css">
+    <!-- Modern UI refine + Lucide line icons (override paling akhir) -->
+    <link rel="stylesheet" href="modern-refine.css">
+    <script src="modern-icons.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
     <script src="data_siswa.js"></script>
 
@@ -1354,9 +1359,9 @@
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // Disable AOS animations di WebView untuk performa
         AOS.init({
-            duration: 800,
-            once: true
+            disable: true
         });
 
         // ==========================================
@@ -1832,7 +1837,7 @@
             });
         }
 
-        // ---- SIGNATURE PAD LOGIC ----
+        // ---- SIGNATURE PAD LOGIC (WebView Optimized) ----
         let sigPads = {}; // Store SignaturePad instances
 
         function initSignaturePad(id) {
@@ -1847,30 +1852,40 @@
 
             const pad = new SignaturePad(canvas, {
                 backgroundColor: 'rgba(0,0,0,0)',
-                penColor: 'white'
+                penColor: 'white',
+                // Optimisasi: kurangi titik yang direkam agar lebih ringan
+                minWidth: 1,
+                maxWidth: 2.5,
+                throttle: 16 // ~60fps cap
             });
 
-            // Resizing for crisp lines
+            // Resizing for crisp lines — OPTIMIZED for WebView
             function resizeCanvas() {
                 if (canvas.offsetWidth === 0) return; // Don't resize if hidden
 
-                const ratio = Math.max(window.devicePixelRatio || 1, 1);
-                // Save current image to restore after resize
-                const data = pad.toDataURL();
+                // WebView perf: cap DPI ratio ke 1 agar canvas tidak terlalu besar
+                const ratio = 1;
+                
+                // Hanya save/restore jika ada data (toDataURL mahal!)
+                const hasData = !pad.isEmpty();
+                let data;
+                if (hasData) {
+                    data = pad.toDataURL();
+                }
 
                 canvas.width = canvas.offsetWidth * ratio;
                 canvas.height = canvas.offsetHeight * ratio;
                 canvas.getContext("2d").scale(ratio, ratio);
 
                 pad.clear(); // necessary to reset scale
-                if (data && data !== 'data:,') pad.fromDataURL(data); // restore
+                if (hasData && data && data !== 'data:,') pad.fromDataURL(data); // restore
             }
 
-            // Simple debounce so we don't clear on every teeny resize
+            // Debounce resize lebih lama untuk WebView
             let resizeTimer;
             window.addEventListener("resize", () => {
                 clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(resizeCanvas, 200);
+                resizeTimer = setTimeout(resizeCanvas, 500);
             });
 
             // Expose resize for external calls (like tab switching)
@@ -3184,27 +3199,23 @@
         window.addEventListener('load', () => {
             const loader = document.getElementById('preloader');
             if (loader) {
+                // Lebih cepat untuk WebView
                 setTimeout(() => {
                     loader.style.opacity = '0';
                     loader.style.visibility = 'hidden';
-                }, 800);
+                    // Hapus dari DOM setelah transisi selesai agar tidak makan memory
+                    setTimeout(() => loader.remove(), 300);
+                }, 300);
             }
         });
 
-        // Enhanced Tab Switcher
+        // Enhanced Tab Switcher — WebView: instant switch (no animation delay)
         document.querySelectorAll('.tab-btn:not(.riwayat-tab-btn)').forEach(btn => {
             btn.addEventListener('click', () => {
-                const container = document.getElementById('link-container');
-                container.classList.add('tabs-animating');
-                
-                setTimeout(() => {
-                    document.querySelectorAll('.tab-btn:not(.riwayat-tab-btn)').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    activeClass = btn.dataset.class;
-                    activateButtons();
-                    
-                    container.classList.remove('tabs-animating');
-                }, 200);
+                document.querySelectorAll('.tab-btn:not(.riwayat-tab-btn)').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeClass = btn.dataset.class;
+                activateButtons();
             });
         });
 
@@ -3248,15 +3259,16 @@
     <script src="ux-enhancements.js"></script>
     <script src="ui-improvements.js"></script>
     <script>
-        // Safety fallback: force-hide preloader after 6 seconds
+        // Safety fallback: force-hide preloader after 3 seconds (dipersingkat)
         setTimeout(function() {
             var loader = document.getElementById('preloader');
             if (loader && loader.style.visibility !== 'hidden') {
                 loader.style.opacity = '0';
                 loader.style.visibility = 'hidden';
+                setTimeout(function() { if(loader.parentNode) loader.remove(); }, 300);
                 console.warn('⚠️ Preloader force-hidden by safety timeout');
             }
-        }, 6000);
+        }, 3000);
     </script>
 </body>
 

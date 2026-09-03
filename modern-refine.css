@@ -1,0 +1,86 @@
+/*
+ * modern-refine.css — calmer, cleaner take on the existing dark theme.
+ * Load LAST so it overrides. Only touches color / shadow / border / type —
+ * no layout geometry — so it stays safe across every (hidden) screen.
+ */
+
+/* 1. Dial the neon down: softer colored glows everywhere they're tokenised. */
+:root {
+    --primary-glow: hsla(var(--h-primary), var(--s-primary), var(--l-primary), 0.12);
+    --secondary-glow: hsla(var(--h-secondary), var(--s-secondary), var(--l-secondary), 0.12);
+    --accent-glow: hsla(var(--h-accent), var(--s-accent), var(--l-accent), 0.12);
+    --success-glow: hsla(var(--h-green), var(--s-green), var(--l-green), 0.12);
+    --warning-glow: hsla(var(--h-amber), var(--s-amber), var(--l-amber), 0.12);
+    --text-muted: #9fb0d0;           /* a touch lighter for readability */
+    --glass-border: rgba(255, 255, 255, 0.08);
+}
+
+/* 2. Quieter ambient background blobs. */
+.glow-1, .glow-2 {
+    opacity: 0.09 !important;
+    filter: blur(170px);
+}
+
+/* 3. Cleaner typography: tighten headings, calmer weight. */
+h1, h2, h3, .section-title, .login-card h2 {
+    letter-spacing: -0.02em;
+}
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+/* 4. Neutralise the loud coloured shadows into soft, modern depth. */
+.btn-main,
+.btn-card,
+.btn-primary-small,
+.btn-doc-print,
+.login-btn {
+    box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.45) !important;
+}
+.btn-main:hover,
+.btn-card:hover,
+.btn-primary-small:hover,
+.login-btn:hover {
+    box-shadow: 0 12px 26px -8px rgba(0, 0, 0, 0.55) !important;
+}
+
+/* Feature cards: soften the heavy drop-shadow stacks. */
+.glass-card,
+.link-card,
+.info-card,
+.card {
+    box-shadow: 0 12px 30px -14px rgba(0, 0, 0, 0.55) !important;
+}
+
+/* Remove the neon halo around round icon badges. */
+.card-icon,
+.card-status {
+    box-shadow: none !important;
+}
+
+/* Active tab: keep the fill, drop the glow ring. */
+.tab-btn.active {
+    box-shadow: 0 6px 16px -6px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08) inset !important;
+}
+
+/* Navbar: flatter, cleaner separation. */
+.navbar {
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 24px -16px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* 5. Login card polish — the first thing every user sees. */
+.login-card {
+    background: rgba(20, 30, 50, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+}
+.login-input:focus,
+.login-input-wrapper:focus-within .login-input {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px var(--primary-glow);
+}
+.login-btn {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+}
+
+/* (Lucide icon baseline .lc/.lc-spin is injected by modern-icons.js so it
+   works on every page, including those that don't load this stylesheet.) */
